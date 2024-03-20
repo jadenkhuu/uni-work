@@ -1,0 +1,64 @@
+#!/bin/dash
+
+# .pig does not exist
+if ! [ -d '.pig' ]
+then
+    echo ".pig does not exist" 1>&2
+    exit 1
+fi
+
+if ! [ "$1" = "-a" ] && ! [ "$1" = "-m" ] 
+then
+    echo "usage pigs-commit [-a] -m message" 1>&2
+    exit 1
+fi
+
+if [ "$1" = "-a" ]
+then
+    msg=$3
+    for files in *
+    do
+        cp "$files" ".pig/index/$files"
+    done
+elif [ "$1" = "-m" ]
+then
+    msg="$2"
+fi
+
+if [ "$msg" = '' ]
+then
+    echo echo "usage pigs-commit [-a] -m message" 1>&2
+    exit 1
+fi
+
+numCommits=$(wc -l < .pig/commits.txt)
+
+if [ "$numCommits" -ne 0 ]
+then
+    prev=$((numCommits - 1))
+
+    if diff -r ".pig/index" ".pig/commit_${prev}" >/dev/null
+    then
+        echo "nothing to commit" 1>&2
+        exit 1
+    fi
+fi
+
+count=0
+while :
+do
+    newCommitDir=".pig/commit_${count}"
+    if ! test -d "$newCommitDir"
+    then
+        mkdir "$newCommitDir"
+        break
+    fi
+    count=$((count + 1))
+done
+
+
+cp -r ".pig/index"/* "${newCommitDir}" > /dev/null 2>&1
+
+
+echo "${count} ${msg}" >> ".pig/commits.txt"
+echo "Committed as commit ${count}"

@@ -1,0 +1,201 @@
+#!/bin/dash 
+
+if ! [ -d ".pig" ]
+then 
+    echo "pigs-log: error: pigs repository directory .pig not found" 1>&2
+    exit 1
+fi
+
+# if [ "$#" -eq 0 ]
+# then
+#     echo "usage: pigs-rm [--force] [--cached] <filenames>" 1>&2
+#     exit 1
+# fi
+
+# if [ "$1" = "--cached" ] && [ "$2" = "--force" ] 
+# then
+#     echo "usage: pigs-rm [--force] [--cached] <filenames>" 1>&2
+#     exit 1
+# fi
+
+# if [ "$#" -eq 2 ] && [ "$1" = "--force" ] && [ "$2" = "--cached" ] 
+# then
+#     echo "usage: pigs-rm [--force] [--cached] <filenames>" 1>&2
+#     exit 1
+# fi
+
+# cache force flags
+cached=0
+force=0
+
+for arg in "$@"
+do
+    # check for cache or force and use a flag variable
+    if [ "$arg" = '--cached' ]
+    then
+        cached=1
+        continue
+    elif [ "$arg" = '--force' ]
+    then
+        force=1
+        continue
+    fi
+
+    if ! [ -f ".pig/index/${arg}" ]
+    then
+        echo "pigs-rm: error: '$arg' is not in the pigs repository" 1>&2
+        exit 1
+    fi
+
+    # --force options
+    if [ "$force" -eq 1 ] && [ "$cached" -eq 1 ] 
+    then
+        rm "${PWD}.pig/index/${arg}"
+        continue
+    elif [ "$force" -eq 1 ] && [ -f "$arg" ]
+    then
+        rm "$arg"
+        continue
+    fi
+
+    index="${PWD}/.pig/index"
+
+    numCommits=$(wc -l < .pig/commits.txt) 
+
+    if [ "$numCommits" -eq 0 ] && [ -f "$arg" ] && ! diff "${index}/${arg}" "$arg">/dev/null
+    then
+        echo "pigs-rm: error: '$arg' in index is different to both the working file and the repository" 1>&2
+        exit 1
+    fi
+
+    if [ "$numCommits" -eq 0 ]
+    then
+        echo "pigs-rm: error: '$arg' has staged changes in the index" 1>&2
+        exit 1
+    fi
+
+    if [ "$cached" -eq 1 ]
+    then
+        index="${PWD}/.pig/index"
+        prevCommit="${PWD}/.pig/commit_${numCommits}"
+
+        if [ ! -f "${index}/${arg}" ] 
+        then
+            echo "pigs-rm: error: '$arg' is not in the pigs repository"
+            exit 1
+        fi
+        if [ -f "${prevCommit}/${arg}" ] && ! diff "$arg" "${prevCommit}/${arg}">/dev/null && ! diff "${prevCommit}/${arg}" "${index}/${arg}">/dev/null && ! diff "$arg" "${index}/${arg}">/dev/null
+        then
+            echo "pigs-rm: error: '$arg' in index is different to both the working file and the repository"
+            exit 1
+        fi
+
+        rm "${index}/${arg}"
+        continue
+        # if [ -f "$arg" ] && ! diff "$arg" "${index}/${arg}">/dev/null
+        # then
+        #     if [ -f "${prevCommit}/${arg}" ] && diff "${index}/${arg}" "${prevCommit}/${arg}">/dev/null
+        #     then
+        #         rm "${index}/${arg}"
+        #         continue
+        #     fi
+        #     if [ -f "${prevCommit}/${arg}" ] 
+        #     then
+        #         if ! diff "${index}/${arg}" "${prevCommit}/${arg}">/dev/null && ! diff "${index}/${arg}" "${arg}">/dev/null
+        #         then 
+        #             echo "pigs-rm: error: '$arg' in index is different to both the working file and the repository" 1>&2
+        #             exit 1
+        #         fi
+        #     fi
+        #     echo "pigs-rm: error: '$arg' in index is different to both the working file and the repository" 1>&2
+        #     exit 1
+        # fi
+
+        # if [ "$numCommits" -ne 0 ]
+        # then
+        #     if [ -f "${prevCommit}/${arg}" ] && ! diff "${index}/${arg}" "${prevCommit}/${arg}">/dev/null
+        #     then
+        #         if  [ -f "${arg}" ] && diff "$arg" "${index}/${arg}">/dev/null
+        #         then
+        #             rm "${index}/${arg}"
+        #             continue                
+        #         else
+        #             echo "pigs-rm: error: '$arg' has staged changes in the index" 1>&2
+        #             exit 1
+        #         fi
+        #     fi
+        # fi
+        # if [ "$numCommits" -eq 0 ]
+        # then
+        #     echo "pigs-rm: error: '$arg' in index is different to both the working file and the repository" 1>&2
+        #     exit 1
+        # fi
+    fi
+
+    # base case
+    if [ "$cached" -eq 0 ] && [ "$force" -eq 0 ] && [ "$numCommits" -ne 0 ]
+    then
+        prev=$((numCommits - 1))
+        prevCommit="${PWD}/.pig/commit_${prev}"
+        if ! [ -f "${prevCommit}/${arg}" ]
+        then
+            echo "pigs-rm: error: '$arg' has staged changes in the index" 1>&2
+            exit 1
+        fi
+
+        if [ -f "$arg" ] && ! diff "${index}/$arg" "$arg">/dev/null
+        then
+            if [ -f "${index}/${arg}" ] && ! diff "${index}/${arg}" "${prevCommit}/${arg}">/dev/null
+            then
+                echo "pigs-rm: error: '$arg' in index is different to both the working file and the repository" 1>&2
+                exit 1
+            fi
+            if [ -f "$arg" ] && ! diff "${arg}" "${prevCommit}/${arg}">/dev/null
+            then
+                echo "pigs-rm: error: '$arg' in the repository is different to the working file" 1>&2
+                exit 1
+            fi
+        fi
+
+        if  [ -f "${prevCommit}/${arg}" ] && ! diff "${index}/${arg}" "${prevCommit}/${arg}">/dev/null
+        then
+            echo "pigs-rm: error: '$arg' has staged changes in the index" 1>&2
+            exit 1
+        fi
+
+        rm "${index}/${arg}"
+        rm "$arg"   
+    fi
+
+
+done
+
+exit 0
+
+
+
+
+        # if diff "$arg" "${PWD}/.pig/index/$arg" && diff "${PWD}/.pig/index/$arg" "${PWD}/.pig/commit_${numCommits}/$arg" >/dev/null
+        # then
+        #     continue
+        # fi
+
+    # if [ "$cached" -eq 1 ] && [ "$force" -eq 0 ]
+    # then
+    #     if diff "$arg" "${PWD}/.pig/index/${arg}" && diff "${PWD}/.pig/index/$arg" "${PWD}/.pig/commit_${numCommits}/$arg" >/dev/null
+    #     then
+    #         rm "${PWD}/.pig/index/${arg}"
+    #         continue
+    #     fi
+    # fi
+
+# echo $cached
+# echo $force
+
+# pigs-rm [--force] [--cached] filenames...
+# force
+# force cache
+# cache
+# alone
+
+# no commits have been made

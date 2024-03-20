@@ -1,0 +1,9 @@
+[core]
+	repositoryformatversion = 0
+	fileMode = false
+	bare = false
+	logallrefupdates = true
+	worktree = /import/reed/2/z5416824/COMP2041/a1/testing
+[user]
+	email = pigs@example.com
+	name = pigs

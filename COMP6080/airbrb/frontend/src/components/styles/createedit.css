@@ -1,0 +1,18 @@
+.create-listing-page {
+    padding: 100px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.preview-box {
+
+}
+
+@media screen and (max-width: 500px) {
+    .create-listing-page {
+        padding-top: '100px';
+        padding-left: 0px;
+        padding-right: 0px;
+        padding-bottom: 0px;
+    }
+}

@@ -1,0 +1,38 @@
+#!/bin/dash 
+
+PATH="$PATH:$(pwd)"
+
+test_dir="$(mktemp -d)"
+cd "$test_dir" || exit 1
+
+expected="$(mktemp)"
+actual="$(mktemp)"
+
+trap 'rm "$expected" "$actual" -rf "$test_dir"' INT HUP QUIT TERM EXIT
+
+echo "test00"
+
+# Successful Case
+cat > "$expected" <<EOF
+Initialised empty pigs repository in .pig
+EOF
+
+pigs-init > "$actual" 2>&1
+
+if ! diff "$expected" "$actual"
+then
+    echo "Test Failed"
+    exit 1
+fi
+
+# Error Message
+
+pigs-init >> "$actual" 2>&1
+
+if ! diff "$expected" "$actual"
+then
+    echo "Test Failed"
+    exit 1
+fi
+
+exit 0

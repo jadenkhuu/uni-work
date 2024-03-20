@@ -1,0 +1,183 @@
+
+========================================================================
+                          Complexity Analysis
+========================================================================
+
+NOTE:
+- Your time complexities should be in big-O notation.
+- For operations that involve only one set, your time complexities should
+  be in terms of n, where n is the number of elements in the set.
+- For operations that involve two sets, your time complexities should be in
+  terms of n and m, where n and m are the number of elements in each of the
+  sets respectively.
+
+
+--------
+SetUnion
+--------
+
+Worst case complexity: O(n*log(n) + m*log(m))
+
+Explanation: 
+My idea behind implementing SetUnion includes creating a new set, 
+then using the function CopyInsert to add all the elements in s1 to 
+the new set, and repeating to add all the elements in s2, skipping 
+duplicates.
+
+The function CopyInsert traverses the tree 's' and uses the function
+TContains only insert an item if it doesn't already exist in the tree.
+The recursive traversal of this tree will have a worst case time 
+complexity of O(log(n)). In the worst case scenario, this function
+will have to traverse through 'n' number of elements in the tree s. 
+
+Thus, the worst case time complexity of CopyInsert can be found by 
+multipying the number of recursive calls 'n' by the complexity of 
+the recursive traversal, 'log(n)'. This gives an overall time
+complexity of O(n*log(n)) for CopyInsert.
+
+However, since SetUnion will call CopyInsert twice, the overall time
+complexity will be O(n*log(n) + m*log(m)) where 'n' is the number of 
+elements in the first set and 'm' is the number of elements in the 
+second set.
+
+---------------
+SetIntersection
+---------------
+
+Worst case complexity: O(n*log(n))
+
+Explanation: 
+My SetIntersection function calls the IntersectionInsert function for 
+its main operation. My main idea in executing this operation included
+traversing the s1 and comparing if the elements in s1 exist in s2 
+using TContains. If the s1 element exists in s2, the item will be added 
+to a new set. 
+
+Both the insert function (TreeInsertAVL) and the search function 
+(TContains) have a time complexity of O(log(n)). For the worst case scenario,
+the function would have to recursively travel through the whole s1 tree of
+'n' number of elements.
+
+Thus, the overall time complexity of SetIntersection can be given by
+(number of recursions) * (complexity of the function called), where
+the worst case number of recursions 'n' is multiplied by the complexity of
+the function 'log(n)' resulting in O(n*log(n)).
+
+
+-------------
+SetDifference
+-------------
+
+Worst case complexity: O(n*log(n))
+
+Explanation: 
+My SetDifference function calls TDiff function for its main operation.
+My main idea in executing this operation included traversing the s1
+and comparing if the elements in s1 exist in s2 using TContains. If 
+the element does not exist in s2, the item will be added to a new set.
+
+Both the insert function, TreeInsertAVL, and the search function, TContains,
+have a time complexity of O(log(n)). For the worst case scenario, the function
+would have to recursively travel through the entire s1 tree with 'n' number 
+of elements.
+
+Thus, the overall time complexity of SetDifference can be given by
+(number of recursions) * (complexity of the function called), where
+the worst case number of recursions 'n' is multiplied by the complexity of
+the function 'log(n)' resulting in O(n*log(n)).
+
+
+---------
+SetEquals
+---------
+
+Worst case complexity: O(n*log(n) + m*log(m))
+
+Explanation: 
+My SetEquals function utilises SetSubset and uses the proof that,
+if A is a subset of B and if B is a subset of A, then A is equal to B.
+Since SetEquals will call SetSubset twice to prove this, the overall
+time complexity of SetEquals would be O(n*log(n) + m*log(m)).
+
+This is because SetSubset has a time complexity of O(n*log(n)) to 
+check if A is a subet of B where 'n' is the number of elements in A. 
+To prove equality, SetSubset called again to check if B is a subset of A, 
+giving a time complexity of O(m*log(m)). 
+
+Thus, the overall time complexity of SetEquals is the sum of these two 
+operations, O(n*log(n) + m*log(m)), where 'n' is the number of elements 
+in set A and 'm' is the number of elements set B.
+
+---------
+SetSubset
+---------
+
+Worst case complexity: O(n*log(n))
+
+Explanation: 
+To find if set A is a subset of set B, my function TSubset()
+traverses through A->tree and uses the function TContains to 
+determine if the elements in A exist in set B. 
+
+The time complexity of traversing an AVL tree is O(log(n)), and
+in the worst case, the function would have to recursively travel 
+through 'n' number of elements in set A to compare all the values.
+
+Thus, the overall time complexity of SetSubset can be given by
+(number of recursions) * (complexity of the function called), where
+the worst case number of recursions 'n' is multiplied by the complexity 
+of the function 'log(n)' resulting in O(n*log(n)).
+
+--------
+SetFloor
+--------
+
+Worst case complexity: O(log(n)) 
+
+Explanation: 
+SetFloor involves determining the floor of a set given an item to compare.
+To do this, s->tree will be traversed recursively and check if there exists
+an element in the set less than or equal to the item inserted.
+
+In the worst case, the function will have to traverse 'n' number of nodes
+before determining if an element in the set that is less than or equal to 
+the item exists. 
+
+The time complexity of traversal in a balanced tree is O(log(n)). Thus, 
+the worst case time complexity of SetFloor is O(log(n))
+
+
+----------
+SetCeiling
+----------
+
+Worst case complexity: O(log(n)) 
+
+Explanation: 
+SetCeiling involves determining the floor of a set given an item to compare.
+To do this, s->tree will be traversed recursively and check if there exists
+an element in the set greater than or equal to the item inserted.
+
+In the worst case, the function will have to traverse 'n' number of nodes
+before determining if an element in the set that is less than or equal to 
+the item exists. 
+
+The time complexity of traversal in a balanced tree is O(log(n)). Thus, 
+the worst case time complexity of SetCeiling is O(log(n))
+
+========================================================================
+               Design Documentation for Cursor Operations
+========================================================================
+
+If you completed the cursor operations, you must explain the design and
+implementation of your solution here.
+
+
+
+
+
+
+
+
+
+

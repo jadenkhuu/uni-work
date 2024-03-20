@@ -1,0 +1,39 @@
+isPalindrome
+
+    inputs: string S of length n
+
+    for i = 0 up to n/2 - 1         | worst case: n/2 iterations
+        if S[i] != S[n - i - 1];    | worst case n/2 iterations
+        return false                | 1
+
+    return true;                    | 1
+
+    time complexity: O(n/2 + n/2 + 1 + 1) = O(n) (ignore lower terms)
+
+
+    2. Algorithms and complexity
+
+    inputs:
+        array A of size n
+        integer v
+    
+    for i = 0 up to n - 1 {                   | n
+        for j = 0 up to n -1 {                | (n - 1) + (n - 2) + ... + 1      
+                                              | = n(n - 1) / 2
+            if A[i] + A[j] == v AND i != j {  | n(n - 1) / 2
+            return true;                      | 1
+            }
+        } 
+    }
+
+    return false                              | 1 
+          
+    time complexity = n + n(n - 1) = n^2
+    = O(n^2)
+
+
+    4. convert a positive integer to its binary representation
+    
+    O(3 log(n)) = O(log(n))
+
+    amortised complexity

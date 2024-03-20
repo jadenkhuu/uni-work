@@ -1,0 +1,35 @@
+body {
+    margin: 0px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.page {
+    margin: 0px;
+}
+
+.banner {
+    height: 80px;
+    position: fixed;
+    background-color: #eeeeee;
+    margin: 0px;
+    width: 100vw;
+    display: flex;
+}
+
+.banner .banner-buttons {
+    margin: 30px;
+    margin-left: auto;
+    font-weight: bold;
+}
+
+.link-container {
+    display: flex;
+}
+
+.logo {
+    margin: 15px;
+    size: 50px;
+    height: 50px;
+    width: 50px;
+    background-color: black;
+}

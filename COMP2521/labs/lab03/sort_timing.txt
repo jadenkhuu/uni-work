@@ -1,0 +1,52 @@
+Input      Initial    Number     AvgTime            AvgTime
+Size       Order      of Runs    for sortIntList    for sort
+
+10000      random     5          0.356s             0.01s
+10000      sorted     5          0.00s              0.00s
+10000      reverse    5          0.00s              0.00s
+
+20000      random     5          1.768s             0.014s
+20000      sorted     5          0.008s             0.006s
+20000      reverse    5          0.01s              0.01s
+
+50000      random     5          13.044s            0.054s
+50000      sorted     5          0.024s             0.022s
+50000      reverse    5          0.28s              0.26s
+
+TODO: add rows for larger input sizes
+
+100000     random     5          58.41s             0.13s
+100000     sorted     5          0.048s             0.16s 
+100000     reverse    5          0.062s             0.06s
+
+1000000    random     5          N/A                N/A
+1000000    sorted     5          0.538s             0.606s
+1000000    reverse    5          0.554s             0.732s
+
+Explanation of timing results:
+
+Random Order:
+The random order resulted in the highest and fastest increasing AvgTime for sortIntList, 
+resulting in a big-O notation most comparable to O(n^2). 
+
+This is due to the fact that the program needs to run through the 'for loop' (line 132) 
+more than the other Initial Orders. Since the initial list is random, when sorting from the 
+initial list to the IntListSortedCopy list (166), there is a chance that the value would have
+to be placed somewhere in the middle of the list instead of in the front or the end (line 129). 
+Thus, having more iterations than the other two Initial Orders.
+
+
+Sorted Order:
+The sorted order resulted in the lowest AvgTime for sortIntList, with linear progression and 
+a big-O notation most comparable to O(n). The time is the shortest for this order because the sorting
+function will only have to add the value from the initial list to the end of the new list, thus only 
+having to run through line 115 (for when the list is initially empty) and line 125 for the rest of 
+the list. Compared to random, sorting the 'sorted order' list does not require adding values to the 
+middle and having to use a curr pointer to traverse the list.
+
+Reverse Order: O(n)
+The reverse order resulted in a low AvgTime for sortIntList, however it took slightly longer than the 
+'sorted order'. Reverse order also has a big-o notation most comparable to O(n). This is due to the 
+fact that the sorting function would only have to add the values from the initial list to the beginning
+of the new list, thus only having to run through line 115 (for the first value added) and 120 (for the
+rest of the values added).

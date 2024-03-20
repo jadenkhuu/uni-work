@@ -1,0 +1,25 @@
+// Lab03 - Wondrous
+// wondrous.c
+//
+// This program was written by Jaden Khuu (z5416824)
+// on 04/03/22
+//
+// Prints out the wondrous numbers of n as a graph of asterisks
+
+
+int main(void) {
+
+    int integer;
+
+    printf("What number would you like to see: 3");
+    scanf("%d", integer);
+    
+    while (integer != 2) {
+    
+        
+    
+    }
+    
+    
+    return 0;
+}

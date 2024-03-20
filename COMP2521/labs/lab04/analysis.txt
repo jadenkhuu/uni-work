@@ -1,0 +1,34 @@
+
+NOTE:
+- Your time complexities should be expressed in big-O notation and be in
+  terms of n, where n is the size of the tree.
+
+==================
+  BSTreeNumLeaves
+==================
+
+- Worst case time complexity: O(n)
+
+- Explanation: The function has to traverse and check every node to determine
+if it is a leaf or parent. 
+
+==================
+BSTreeDeleteLeaves
+==================
+
+- Worst case time complexity: O(n)
+
+- Explanation: Similarly to BSTreeNumLeaves, this function will have to 
+traverse and check every node to see if it is a leaf before deleting.
+
+==================
+ BSTreeLevelOrder
+==================
+
+- Worst case time complexity: O(n)
+
+- Explanation: Despite having to create a queue, the number of operations
+are only one step each time. the amount of times that a value is printed 
+from the queue depends on how many nodes existed initially
+
+

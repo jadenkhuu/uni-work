@@ -1,0 +1,397 @@
+/* base styles, feel free to edit */
+html, body {
+    margin: 0;
+    padding: 0;
+    background-color: #512F69;
+    height: 100%;
+    font-family: -apple-system, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+.page-block {
+    display: none;
+}
+
+/* errors */
+#page-error {
+    background-color: #6C3F8C;
+    width: 100vw;
+    height: 100vh;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+}
+#error-block {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #512F69;
+    color: white;
+    height: 50%;
+    width: 40%;
+    padding: 2%;
+    border: 5px solid white;
+    border-radius: 5px;
+}
+#error-exit {
+    margin: 5%;
+}
+#page-msg-edit {
+    background-color: #6C3F8C;
+    width: 100vw;
+    height: 100vh;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+}
+#edit-block {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #512F69;
+    color: white;
+    height: 35%;
+    width: 70%;
+    padding: 2%;
+    border: 5px solid white;
+    border-radius: 5px;
+}
+#edit-msg-submit{
+    margin: 5%;
+}
+
+/* login */
+#page-login {
+    background-color: #6C3F8C;
+    display: flex;
+    width: 100vw;
+    height: 100vh;
+    justify-content: center;
+    align-items: center;
+}
+#page-login .login-block {
+    background-color: #512F69;
+    color: white;
+    height: 50%;
+    width: 40%;
+    /* padding: 20px; */
+    padding: 2%;
+    border: 5px solid white;
+    border-radius: 5px;
+}
+
+/* register */
+#page-register {
+    background-color: #6C3F8C;
+    display: flex;
+    width: 100vw;
+    height: 100vh;
+    justify-content: center;
+    align-items: center;
+}
+#page-register .register-block {
+    background-color: #512F69;
+    color: white;
+    height: 70%;
+    width: 40%;
+    /* padding: 20px; */
+    padding: 2%;
+    border: 5px solid white;
+    border-radius: 5px;
+}
+
+/* dashboard */
+#page-dashboard {
+    width: 100vw;
+    height: 100vh;
+}
+#dashboard-banner {
+    display: flex;
+    height: 10%;
+    width: 100%;
+    background-color: #512F69;
+    color: white;
+}
+#dashboard-banner .heading {
+    background-color: #512F69;
+    height: 100%;
+    width: 20%;
+    padding-left: 2.5%;
+    display: flex;
+    align-items: center;
+    border-bottom: 2px solid white;
+}
+#dashboard-banner .banner {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    background-color: #512F69;
+    height: 100%;
+    width: 80%;
+    /* padding-right: 1.5%; */
+    border-bottom: 2px solid white;
+}
+#logout-button {
+    margin: 2%;
+    color: white;
+}
+
+/* dashboard left side */
+#dashboard-main {
+    display: flex;
+    height: 90%;
+    width: 100vw;
+}
+#dashboard-main .left {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 22%;
+}
+#dashboard-main .left #channel-list {
+    background-color: #512F69;
+    color: white;
+    height: 95%;
+    overflow: auto;
+    border-right: 2px solid white;
+}
+#dashboard-main .left .button-div{
+    height: 5%;
+    background-color: #512F69;
+    display: flex;
+    flex: row;
+    border-right: 2px solid white;
+}
+.button-div .button-div-buttons {
+    font-size: 110%;
+}
+
+/* dashboard focus area */
+#dashboard-focus {
+    background-color: #6C3F8C;
+    color: white;
+    width: 78%;
+    height: 100%;
+}
+#page-join-page {
+    justify-content: center;
+    align-items: center;
+    height: 85%;
+    width: 100%;
+}
+#channel-details {
+    display: flex;
+    flex-direction: column;
+    gap: 5%;
+    flex-wrap: wrap;
+    width: 100%;
+    padding: 1%;
+    height: 15%;
+    /* background-color: #442859; */
+    background-color: #512f69;
+}
+#descriptionDiv {
+    overflow: y;
+    width: 20%;
+    height: 10%;
+}
+
+/* Message related */
+#main-messages {
+    flex-direction: column-reverse;
+    height: 80%;
+    width: 100%;
+    overflow: auto;
+}
+#main-messages .message-box {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+}
+#main-messages .pic {
+    width: 50px;
+    height: 50px;
+    background-color: white;
+    margin-right: 10px;
+    border-radius: 5px;
+}
+#main-messages .message-content {
+    flex-grow: 1;
+    margin-right: 10px;
+}
+#main-messages .name-time {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 5px;
+}
+#main-messages .msg-buttons {
+    display: flex;
+    flex-direction: row-reverse;
+    width: 200px;
+    height: 50px;
+    background-color: #512F69;
+    color: white;
+    border-radius: 5px;
+}
+.msg-buttons .msg-delete {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    height: 50px;
+    width: 50px;
+}
+.msg-buttons .msg-pin {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    height: 50px;
+    width: 50px;
+}
+.msg-buttons .msg-edit {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    height: 50px;
+    width: 50px;
+}
+.msg-buttons .msg-react {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    height: 50px;
+    width: 50px;
+}
+
+#dashboard-focus #message-container {
+    width: 100%;
+}
+
+#message-container #message-text {
+    width: 90%;
+}
+#message-container #msg-send-button {
+    width: 10%;
+}
+
+/* creating channel */
+#page-createChannel {
+    background-color: #6C3F8C;
+    display: flex;
+    width: 100vw;
+    height: 100vh;
+    justify-content: center;
+    align-items: center;
+}
+#page-createChannel .create-block {
+    background-color: #512F69;
+    color: white;
+    height: 60%;
+    width: 50%;
+    padding: 20px;
+    border: 5px solid white;
+    border-radius: 5px;
+}
+
+/* editing channel */
+#page-editChannel {
+    background-color: #6C3F8C;
+    display: flex;
+    width: 100vw;
+    height: 100vh;
+    justify-content: center;
+    align-items: center;
+}
+#page-editChannel .edit-block {
+    background-color: #512F69;
+    color: white;
+    height: 60%;
+    width: 50%;
+    padding: 20px;
+    border: 5px solid white;
+    border-radius: 5px;
+}
+
+@media screen and (max-width: 400px) {
+    #dashboard-main .left #create-channel-button {
+        font-size: 70%;
+        line-height: 95%;
+        padding: 0%;
+    }
+    #channel-list {
+        font-size: 70%;
+    }
+    #page-login .login-block {
+        font-size: 70%;
+        width: 70%;
+    }
+    #page-register .register-block {
+        font-size: 70%;
+        width: 70%;
+    }
+    #page-createChannel .create-block {
+        font-size: 70%;
+        width: 70%;
+        height: 80%;
+    }
+    #channel-details {
+        font-size: 50%;
+    }
+
+    #main-messages .msg-buttons {
+        font-size: 40%;
+        display: flex;
+        flex-direction: row-reverse;
+        width: 40px;
+        height: 40px;
+        background-color: #512F69;
+        color: white;
+        border-radius: 5px;
+    }
+    .msg-buttons .msg-delete {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: white;
+        height: 40px;
+        width: 10px;
+    }
+    .msg-buttons .msg-pin {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: white;
+        height: 40px;
+        width: 10px;
+    }
+    .msg-buttons .msg-edit {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: white;
+        height: 40px;
+        width: 10px;
+    }
+    .msg-buttons .msg-react {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: white;
+        height: 40px;
+        width: 10px;
+    }
+    
+}
+
+.inputs-padding {
+    margin-bottom: 2%; 
+    margin-top: 2%;
+}

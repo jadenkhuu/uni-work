@@ -1,0 +1,72 @@
+[COMP1511 Final Exam]
+You should edit the empty space between the curly braces.
+You should not edit anything else in this file.
+
+You can test this file conforms to the correct syntax with "1511 autotest-pracexam prac_sa"
+
+You should submit this file with the command "give cs1511 prac_sa prac_sa.txt"
+
+If you need a new copy of the file, move this file to a safe place,
+then run "1511 fetch-pracexam".
+
+
+q1: What does this program print? (see the exam paper for details)
+Enter your answer inside the curly brackets (extra spaces are ignored)
+[q1]{{{ t o m }}}
+
+q2: Which of these if statements meets the condition shown? (see the exam paper for details)
+Enter your answer as some of A, B, C or D inside the curly brackets (extra spaces are ignored)
+[q2]{{{ B, C}}}
+
+q3: Which is the first line of the file that contains an error? (see the exam paper for details)
+Enter your answer inside the curly brackets (extra spaces are ignored)
+[q3]{{{ Line 4 }}}
+
+q4: Which definition is correct? (see the exam paper for details)
+Enter your answer as either a, b, c, or d inside the curly brackets (extra spaces are ignored)
+[q4]{{{ A }}}
+
+q5: Which variables would compile without errors? (see the exam paper for details)
+Enter your answer as some of A, B, C, D or E inside the curly brackets (extra spaces are ignored)
+[q5]{{{ A, B, D }}}
+
+q6: What code should replace [SECRET]? (see the exam paper for details)
+Enter your answer inside the curly brackets (extra spaces are ignored)
+[q6]{{{ int *a }}}
+
+q7: What code should replace [SECRET] (see the exam paper for details)
+Enter your answer inside the curly brackets (extra spaces are ignored)
+[q7]{{{my_number <= 8}}}
+
+q8:  (see the exam paper for details)
+Enter your answer as one of A, B, C, D or E inside the curly brackets (extra spaces are ignored)
+[q8]{{{ C, D }}}
+
+q9: Which style issues are present in the code? (see the exam paper for details)
+Enter your answer as some of A, B, C, or D inside the curly brackets (extra spaces are ignored)
+[q9]{{{ A, D }}}
+
+q10: Which of the following describes the process to add an element to a linked list? (see the exam paper for details)
+Enter your answer as one of A, B, C or D inside the curly brackets (extra spaces are ignored)
+[q10]{{{  }}}
+
+
+q11: provided in the real exam.
+
+q12: provided in the real exam.
+
+q13: provided in the real exam.
+
+q14: provided in the real exam.
+
+q15: provided in the real exam.
+
+q16: provided in the real exam.
+
+q17: provided in the real exam.
+
+q18: provided in the real exam.
+
+q19: provided in the real exam.
+
+q20: provided in the real exam.

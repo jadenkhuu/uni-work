@@ -1,0 +1,60 @@
+
+POLICE ACADEMY 2521
+
+Red alert! A thief is on the run.
+Agents, to your cars. You have 30 hours.
+
+Hour 0
+  T  D1  D2  D3  D4
+  3   8   2   6   8 
+
+Enter command: Hour 1
+  T  D1  D2  D3  D4
+ 10  12   1   2  12 
+
+Hour 2
+  T  D1  D2  D3  D4
+  3   5   7   0   5 
+
+Hour 3
+  T  D1  D2  D3  D4
+ 10   9   1   2   9 
+
+Hour 4
+  T  D1  D2  D3  D4
+ 19  13  18   1   2 
+
+Hour 5
+  T  D1  D2  D3  D4
+ 17  16   1   7   0 
+
+Hour 6
+  T  D1  D2  D3  D4
+ 19  17   7   1   2 
+
+Hour 7
+  T  D1  D2  D3  D4
+ 10  19   1  18   1 
+
+Hour 8
+  T  D1  D2  D3  D4
+  3   2  18   1   7 
+
+Hour 9
+  T  D1  D2  D3  D4
+ 10   1   1   2   1 
+
+Hour 10
+  T  D1  D2  D3  D4
+ 19   7   2   3  18 
+
+Hour 11
+  T  D1  D2  D3  D4
+ 17   1   3  10   1 
+
+Hour 12
+  T  D1  D2  D3  D4
+ 19   2  10  19   2 
+
+D3 caught the thief in a19 (19)
+YOU WIN - THIEF CAUGHT!

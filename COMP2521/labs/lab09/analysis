@@ -1,0 +1,29 @@
+COMP 2521 Sort Detective Lab Report
+by Jimmy Duong (z5418904), Jaden Khuu (z5416824)
+
+In this lab, the aim was to measure the performance
+of two sorting programs, without access to the code,
+and determine which sorting algorithmn each program uses.
+
+Experimental Design
+
+The design for this experiment will be based on how the sorting algorithmns
+have different goals in such that there are different time complexities, 
+stabilities and adaptabilities. Through finding the worst
+case time complexity to be either O(n^2) or O(nlogn) we are able to almost 
+immediately deduce whether the sorting algorithmn is either belongs to 
+the (Bubble, Insertion or Selection) category of sorts or the (Merge and quick
+sorts).
+
+Experimental Results
+
+
+
+
+
+
+
+
+
+
+Conclusions

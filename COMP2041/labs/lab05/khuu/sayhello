@@ -1,0 +1,4 @@
+#!/bin/dash 
+
+echo "hi"
+echo "hello"

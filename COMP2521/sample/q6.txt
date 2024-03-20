@@ -1,0 +1,13 @@
+Question 6
+
+Which of the data structures is most suitable? Justify your answer.
+You must use time complexities as a basis for your justification.
+
+Answer: AVL tree
+
+Firstly, a hash table is not ordered/sorted which makes using a 
+priority queue not suitable
+
+Ordered linked lists and ordered arrays 
+
+

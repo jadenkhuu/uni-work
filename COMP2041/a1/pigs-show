@@ -1,0 +1,46 @@
+#!/bin/dash
+
+# error .pig does not exist
+if ! [ -d ".pig" ]
+then 
+    echo "pigs-log: error: pigs repository directory .pig not found" 1>&2
+    exit 1
+fi
+
+# error case: usage error
+if ! [ "$#" -ne 2 ] 
+then
+    echo "usage: pigs-show <commit>:<filename>" 1>&2
+    exit 1
+fi
+
+commitNum=$(echo "$1" | cut -d':' -f1)
+fileName=$(echo "$1" | cut -d':' -f2)
+
+# error cases: empty commit number + commit dir doesnt exist
+if [ "$commitNum" = '' ]
+then
+    if ! [ -f ".pig/index/$fileName" ]
+    then
+        echo "pigs-show: error: '$fileName' not found in index" 1>&2
+        exit 1
+    else
+        cat ".pig/index/$fileName"
+        exit 0
+    fi
+elif ! [ -d ".pig/commit_${commitNum}" ]
+then
+    echo "pigs-show: error: unknown commit '$commitNum'" 1>&2
+    exit 1
+fi
+
+if ! [ -f ".pig/commit_${commitNum}/$fileName" ]
+then
+    echo "pigs-show: error: '$fileName' not found in commit $commitNum" 1>&2
+    exit 1
+else
+    cat ".pig/commit_${commitNum}/$fileName"
+    exit 0
+fi
+
+

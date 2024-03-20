@@ -1,0 +1,151 @@
+body {
+    margin: 0px;
+    font-family: Arial, Helvetica, sans-serif;
+
+    background-color: #ccc;
+}
+
+.page {
+    margin: 0px;
+    background-color: #ccc;
+}
+
+.nav-bar {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+
+    width: 100%;
+    height: 100px;
+
+    background-color: #333;
+    color: #fff;
+
+    border-top: 1px solid #fff;
+
+    margin: 0px;
+    padding: 0 10%;
+
+    box-sizing: border-box;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.nav-bar a, .nav-bar a:link, .nav-bar a:visited, .nav-bar a:hover, .nav-bar a:active {
+    color: #fff;
+    text-decoration: none;
+}
+
+.nav-logo {
+    height: 20px;
+    width: 20px;
+    background-image: url("../public/logo192.png");
+    background-position: center;
+    background-size: cover;
+}
+.dashboard {
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    height: 100vh;
+}
+
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    gap: 10px;
+    height: 70%;
+    width: 70%;
+    margin: 5%;
+
+    font-weight: bold;
+    color: #333;
+}
+.box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 5px solid #fff;
+    padding: 20px;
+    border-radius: 5px;
+}
+
+.math-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 90vh;
+    flex-direction: column;
+}
+.math-container {
+    display: flex;
+    height: 200px;
+    width: 90%;
+}
+.math-child {
+    width: 20%;
+    height: 40%;
+    background: linear-gradient(to right, #abcabc, #cbacbd);
+    color: #333;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    font-size: 200%;
+    font-weight: bold;
+}
+
+.connect-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 90vh;
+    flex-direction: column;
+  }
+.connect-container {
+    display: grid;
+    grid-template-columns: repeat(10, 10%);
+    grid-template-rows: repeat(10, 10%);
+    height: 600px;
+    width: 600px;
+}
+.square {
+    border: 2px solid #333;
+    box-sizing: border-box;
+}
+
+.memory-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 90vh;
+    flex-direction: column;
+}
+.memory-container {
+    height: 600px;
+    width: 600px;
+
+    display: grid;
+    grid-template-columns: repeat(4, 25%);
+    grid-template-rows: repeat(4, 25%);
+    gap: 1px;
+}
+.memory-cell {
+    border: 1px solid rgb(255, 255, 0);
+    background-color: white;
+}
+
+
+@media (max-width: 1400px) {
+    .nav-bar {
+      height: 80px;
+    }
+}
+@media (max-width: 800px) {
+    .nav-bar {
+      height: 60px;
+    }
+}

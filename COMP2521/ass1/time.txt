@@ -1,0 +1,99 @@
+SetUnion
+Input Size        Number Runs        Avg Time
+1000              5                  0.0054s
+2000              5                  0.0096s
+3000              5                  0.0122s
+4000              5                  0.016s
+5000              5                  0.0214s
+
+10000             5                  0.0444s
+20000             5                  0.0912s
+30000             5                  0.140s
+40000             5                  0.192s
+50000             5                  0.246s
+
+SetIntersection
+Input Size        Number Runs        Avg Time
+1000              5                  0.005s
+2000              5                  0.009s
+3000              5                  0.013s
+4000              5                  0.017s
+5000              5                  0.021s
+
+10000             5                  0.0444s
+20000             5                  0.090s
+30000             5                  0.141s
+40000             5                  0.194s
+50000             5                  0.245s
+
+SetDifference
+Input Size        Number Runs        Avg Time
+1000              5                  0.005s
+2000              5                  0.009s
+3000              5                  0.012s
+4000              5                  0.016s
+5000              5                  0.020s
+
+10000             5                  0.043s
+20000             5                  0.090s
+30000             5                  0.140s
+40000             5                  0.192s
+50000             5                  0.246s
+
+Union, intersection, difference likely have the same time complexity
+
+SetEquals
+Input Size        Number Runs        Avg Time
+1000              5                  0.005s
+2000              5                  0.009s
+3000              5                  0.012s
+4000              5                  0.016s
+5000              5                  0.021s
+
+10000             5                  0.043s
+20000             5                  0.091s
+30000             5                  0.141s
+40000             5                  0.192s
+50000             5                  0.245s
+
+SetSubset
+Input Size        Number Runs        Avg Time
+1000              5                  0.005s
+2000              5                  0.009s
+3000              5                  0.012s
+4000              5                  0.016s
+5000              5                  0.021s
+
+10000             5                  0.043s
+20000             5                  0.091s
+30000             5                  0.140s
+40000             5                  0.193s
+50000             5                  0.246s
+
+SetFloor
+Input Size        Number Runs        Avg Time
+1000              5                  0.005s
+2000              5                  0.009s
+3000              5                  0.
+4000              5                  0.
+5000              5                  0.
+
+10000             5                  0.
+20000             5                  0.
+30000             5                  0.
+40000             5                  0.
+50000             5                  0.
+
+SetCeiling
+Input Size        Number Runs        Avg Time
+1000              5                  0.
+2000              5                  0.
+3000              5                  0.
+4000              5                  0.
+5000              5                  0.
+
+10000             5                  0.
+20000             5                  0.
+30000             5                  0.
+40000             5                  0.
+50000             5                  0.

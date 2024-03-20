@@ -1,0 +1,40 @@
+#!/bin/dash
+
+if ! test -d ".pig"
+then
+    echo "pigs-add: error: pigs repository directory .pig not found" 1>&2
+    exit 1
+fi
+
+for file in "$@"
+do
+    exists=0
+    validName=0
+    
+    if ! [ -f "$file" ]
+    then
+        if [ -f ".pig/index/${file}" ]
+        then
+            rm ".pig/index/${file}"
+            exit 1
+        fi
+        echo "pigs-add: error: can not open 'non_existent_file'" 1>&2
+        exit 1
+    else
+        exists=$((exists + 1))
+    fi
+    
+
+    if [ "$(echo "$file" | grep -E '[a-zA-Z0-9.,_-]')" = "" ]
+    then
+        echo "pigs-add: error: invalid filename '$file'" 1>&2
+        exit 1
+    else
+        validName=$((validName + 1))
+    fi
+
+    if [ "$exists" -eq 1 ] && [ "$validName" -eq 1 ]
+    then
+        cp "$file" "${PWD}/.pig/index/"
+    fi
+done

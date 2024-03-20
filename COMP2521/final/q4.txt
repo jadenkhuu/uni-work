@@ -1,0 +1,21 @@
+Question 4
+
+(a) What are the edges selected by the Kruskal's algorithm in generating
+    the minimum spanning tree of the graph?
+    2-6 
+    3-5
+    3-4
+    3-0
+    5-8
+    2-1
+    2-3
+    8-7
+
+
+(b) What cycles were encountered during the construction of the minimum
+    spanning tree in (a)?
+    5-3-4 can make a cycle with 5-4
+    2-3-0 can make a cycle with 0-2
+    
+
+

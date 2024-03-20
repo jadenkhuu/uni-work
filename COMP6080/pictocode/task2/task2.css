@@ -1,0 +1,263 @@
+body {
+    font-family: Arial, Helvetica;
+    margin: 0px;
+} 
+
+.container {
+    width: 786px;
+    height: 1120px;
+    background-image: url(assets/background.png);
+    background-position: 50.2% 105%;
+    background-size: 350%;
+    position: relative;
+}
+
+.top {
+    background-color: #ffffff;
+    height: 137px;
+    width: 786px;
+    display: flex;
+}
+.top .car-emoji {
+    background-color: #f2f4f5;
+    /* background-color: aqua; */
+    width: 80px;
+    height: 80px;
+    font-size: 32px;
+    
+    margin-left: 27px;
+    margin-top: 13px;
+    padding-top: 20px;
+    padding-left: 20px;
+
+}
+.top .search-bar input{
+    background-color: #f2f4f5;
+    /* background-color: red; */
+    margin-top: 13px;
+    height: 100px;
+    width: 530px;
+    border: 0px;
+    padding-left: 3.5px;
+    padding-bottom: 2px;
+
+    color: #6a7280;
+    font-size: 27px;
+    letter-spacing: 0.001px;
+}
+.top .magnifying-glass {
+    background-color: #f4f4f4;
+    height: 100px;
+    width: 100px;
+    margin-top: 13px;
+    background-image: url(assets/glass.png);
+    background-size: 40%;
+    background-repeat: no-repeat;
+    background-position: 48% 53%;
+}
+
+.paragraph-one {
+    width: 739px;
+    height: 262px;
+    color: #ffffff;
+
+    padding-top: 50px;
+    padding-left: 47px;
+    
+    font-weight: bold;
+    font-size: 43px;
+    line-height: 60px;
+    letter-spacing: 0.35px;
+}
+
+.book-parking-box {
+    background-color: #ffffff;
+    height: 415px;
+    width: 770px;
+    margin-left: 8px;
+    position: relative;
+}
+.book-parking-title {
+    color: #2c2a2c;
+    font-size: 43px;
+    font-weight: bold;
+    letter-spacing: 0.1px;
+
+    padding-top: 26.5px;
+    padding-left: 38px;
+}
+
+.from-to {
+    position: relative;
+    top: 27px;
+    left: 10px;
+    display: flex;
+    row-gap: 10px;
+}
+.from-block {
+    background-color: #f4f4f4;
+    height: 104px;
+    width: 370px;
+    margin-right: 10px;
+}
+.from-block input {
+    border: 0px;
+    height: 104px;
+    width: 280px;
+    
+    padding-bottom: 2px;
+    padding-left: 22px;
+    font-size: 27px;
+    letter-spacing: 0.1px;
+    
+    background-color: #f4f4f4;
+    color: #6a7380;
+}
+.from-calendar {
+    background-color: #f4f4f4;
+    position: relative;
+    left: 20px;
+    top: 15px;
+}
+.to-block {
+    background-color: #f4f4f4;
+    height: 104px;
+    width: 370px;
+}
+.to-block input {
+    border: 0px;
+    height: 104px;
+    width: 280px;
+
+    padding-bottom: 2px;
+    padding-left: 22px;
+    font-size: 27px;
+    letter-spacing: 0.1px;
+
+    background-color: #f4f4f4;
+    color: #6a7380;
+}
+.to-calendar {
+    background-color: #f4f4f4;
+    position: relative;
+    left: 20px;
+    top: 15px;
+}
+
+.parking-options {
+    height: 104px;
+    width: 370px;
+    display: flex;
+    position: relative;
+    left: 10px;
+    top: 37px;
+}
+.parking-options button{
+    color: #ffffff;
+    position: relative;
+    background-color: #cb4b0d;
+    border: 0px;
+    height: 104px;
+    width: 295px;
+
+    /* display: flex; */
+    /* justify-content: center; */
+    /* align-items: center; */
+
+    /* padding-top: 4px; */
+    /* padding-left: 50px; */
+
+    padding-left: 50px;
+    padding-top: 4px;
+    margin: 0px;
+
+    font-size: 25.5px;
+    letter-spacing: 0.01px;
+
+}
+.parking-options .button-arrow {
+    color: #ffffff;
+    position: relative;
+    background-color: #cb4b0d;
+    height: 74px;
+    width: 80px;
+
+    padding-top: 30px;
+    padding-left: 10px;
+    margin: 0px;
+
+    font-size: 30px;
+    font-weight: bold;
+}
+
+.white-footer {
+    position: relative;
+    display: flex;
+    top: 62px
+}
+.white-footer .text {
+    position: relative;
+    left: 115px;
+
+    font-size: 30px;
+    font-weight: bold;
+    color: black;
+    letter-spacing: 0.1px;
+}
+.white-footer .arrow {
+    position: relative;
+    left: 140px;
+    bottom: 6px;
+
+    font-size: 30px;
+    font-weight: bold;
+    color: #93328e;
+}
+
+.footer {
+    display: flex;
+    position: relative;
+    top: 80px;
+    left: 67px;
+
+}
+.footer .text {
+    height: 100px;
+    width: 485px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.footer .text .first{
+    color: white;
+    font-size: 60px;
+    font-weight: bold;
+    letter-spacing: 0.1px;
+}
+.footer .text .last {
+    position: relative;
+    color: white;
+    font-size: 22px;
+    font-weight: bold;
+    line-height: 41px;
+    right: 5px
+}
+.footer .arrow {
+    position: relative;
+    left: 25px;
+    height: 99px;
+    width: 88px;
+    background-color: #93328f;
+
+    font-size: 30px;
+    font-weight: bold;
+
+    padding-top: 1px;
+    padding-left: 12px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}

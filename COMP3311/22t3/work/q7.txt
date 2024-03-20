@@ -1,0 +1,33 @@
+# COMP3311 22T3 Final Exam Q7
+# Relational Algebra
+
+
+(A) Proj[a]R
+a - x, y, z
+
+
+(B) Sel[e>d]S
+e | d | c
+----------
+8 | 7 | c
+9 | 6 | d
+
+
+(C) R Join S
+ a | b | c | e | d |
+---+---+---+---+---+
+ x | 1 | a | 6 | 9 |
+ y | 2 | b | 7 | 8 |
+ z | 3 | a | 6 | 9 |
+ x | 4 | b | 7 | 8 |
+ y | 5 | a | 6 | 9 |
+
+(D) R Join[b=e] S
+ a | b | R.c | e | d | S.c
+---+---+-----+---+---+----
+
+(E) R Div T
+
+
+
+

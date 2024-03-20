@@ -1,0 +1,19 @@
+#!/bin/sh
+
+for size in 100000 200000 400000 800000 #change number of input here
+do
+    for order in random 
+    do
+        echo === Testing for $order input, size $size === 
+        for i in 1 2 3 4 5
+        do
+            case $order in
+                random)   flag="R" ;;
+
+            esac
+                { ./gen $size $flag | /usr/bin/time -f "%U" ./sortB > /dev/null ; }     #change ur sort algo here 
+        done
+
+        echo "" 
+    done
+done

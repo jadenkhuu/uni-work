@@ -1,0 +1,649 @@
+/* 
+The big page is 
+1197 x 1610 pixels, and the small page is 
+453 x 1873 pixels 
+*/
+
+.container {
+    background-color: #141414;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+}
+
+.top {
+    position: relative;
+    width: 100vw;
+    height: 42.5vh;
+    background-color: #141414;
+    display: flex;
+    flex-wrap: wrap;
+}
+.top .left {
+    position: relative;
+    width: 50vw;
+    color: white;
+}
+.top .left .title {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    font-size: 405%;
+    line-height: 85%;
+    font-style: italic;
+    font-weight: bold;
+    top: 1.5%;
+    left: 6%;
+}
+.top .left .title .text {
+    width: 50%;
+}
+.top .left .subtitle {
+    position: relative;
+    top: 7%;
+    left: 6.5%;
+    font-size: 105%;
+    font-weight: bold;
+    color: #cdcdcd;
+}
+.top .left .line {
+    position: relative;
+    top: 7.5%;
+    width: 70%;
+    right: 8%;
+    color: #373737;
+}
+.top .left .fees {
+    position: relative;
+    font-style: italic;
+    font-weight: bold;
+    font-size: 137%;
+    top: 10.5%;
+    left: 6.5%;
+    line-height: 175%;
+}
+.top .left .includes {
+    position: relative;
+    font-size: 125%;
+    top: 12%;
+    left: 6.5%;
+    color: #cdcdcd;
+}
+.top .left .list {
+    list-style-image: url(assets/tick.svg);
+    position: relative;
+    font-size: 135%;
+    top: 10%;
+    left: 5%;
+    line-height: 208%;
+    color: #cdcdcd;
+}
+
+.top .right {
+    position: relative;
+    width: 50vw;
+    color: white;
+}
+.top .right .title {
+    position: relative;
+    font-size: 405%;
+    line-height: 85%;
+    font-style: italic;
+    font-weight: bold;
+    top: 1.5%;
+    left: 1.5%;
+}
+.top .right .title {
+    width: 80%;
+    position: relative;
+    font-size: 400%;
+    line-height: 85%;
+    font-style: italic;
+    font-weight: bold;
+    top: 1.5%;
+    left: 1.5%;
+}
+.top .right .subtitle {
+    position: relative;
+    font-size: 105%;
+    font-weight: bold;
+    left: 2%;
+    top: 15.5%;
+    color: #cdcdcd;
+}
+.top .right .line {
+    position: relative;
+    top: 16.5%;
+    width: 71%;
+    right: 13%;
+    color: #373737;
+}
+.top .right .fees-text {
+    position: relative;
+    top: 19.5%;
+    left: 2%;
+}
+.top .right .fees-text .fees1 {
+    position: relative;
+    font-size: 135%;
+    font-style: italic;
+    font-weight: bold;
+    margin-bottom: 2.5%;
+}
+.top .right .fees-text .fees2 {
+    position: relative;
+    font-size: 135%;
+    line-height: 100%;
+    font-style: italic;
+    font-weight: bold;
+    margin-bottom: 3.6%;
+    width: 70%;
+}
+.top .right .fees-text .small-text {
+    position: relative;
+    font-size: 105%;
+    line-height: 105%;
+    color: #cdcdcd;
+}
+
+.middle {
+    position: relative;
+    width: 100vw;
+    height: 18vh;
+    background-color: #141414;
+    color: white;
+    display: flex;
+    flex-direction: column;
+}
+.middle .banner {
+    position: relative;
+    background-color: #252525;
+    height: 5.53vh;
+    width: 92.4vw;
+    top: 3vh;
+    left: 3.6vw;
+    display: flex;
+}
+.middle .banner .flex {
+    display: flex;
+}
+.middle .banner .flex .diamond {
+    background-image: url(assets/little-diamond.svg);
+    background-repeat: no-repeat;
+    background-position: 55% 40%;
+    background-size: 55%;
+    height: 5.53vh;
+    width: 4.3vh;
+}
+.middle .banner .flex .text {
+    position: relative;
+    font-weight: bold;
+    font-style: italic;
+    font-size: 130%;
+    left: 0.5%;
+    top: 37%
+}
+.middle .banner .learn-button {
+    position: relative;
+    background-color: #252525;
+    top: 27%;
+    left: 53.6%;
+    height: 40.5%;
+    width: 15.2%;
+    font-weight: bold;
+    letter-spacing: 4px;
+    border-width: 1.5px;
+    border-color: white;
+    color: white;
+}
+.middle .banner .learn-button:hover {
+    background-color: #ffffff;
+    color: #000000;
+}
+.middle .sign-up-button {
+    position: relative;
+    top: 31%;
+    height: 17.5%;
+    width: 18%;
+    left: 3.1%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    letter-spacing: 3px;
+    font-size: 110%;
+    font-weight: bold;
+    color: white;
+    background-color: #27b069;
+    /* background-color: red; */
+}
+.middle .sign-up-button:hover {
+    opacity: 0.5;
+}
+
+.bottom {
+    background-color: #141414;
+    height: 39.5vh;
+    color: white;
+    position: relative;
+}
+.bottom .table-big {
+    position: relative;
+    left: 3%;
+    top: 13.5%;
+    font-size: 115%;
+}
+.bottom .table-big .table {
+    width: 93%;
+    height: 17vh;
+    border-collapse: collapse;
+}
+.bottom .table-big .comparison {
+    text-align: left;
+    font-size: 115%;
+    color: white;
+}
+.bottom .table-big th {
+    border-bottom: 1px solid;
+    border-color: #373737;
+    color: #cdcdcd;
+}
+.bottom .table-big td {
+    border-bottom: 1px solid;
+    border-color: #373737;
+    text-align: center;
+}
+.bottom .table-big .leftalign {
+    text-align: left;
+    width: 37.5%;
+    color: #cdcdcd;
+}
+.bottom .table-big .col2 {
+    width: 10%;
+    border: none;
+    background-color: #252525;
+    /* border-color: #252525; */
+}
+.bottom .table-big .col3 {
+    width: 25%;
+    color: #cdcdcd;
+}
+.bottom .table-big .col4 {
+    width: 17%;
+    color: #cdcdcd;
+}
+.bottom .table-big .col5 {
+    width: 10.5%;
+    color: #cdcdcd;
+}
+.bottom .table-big .us {
+    border-color: #252525;
+}
+
+.bottom .table-small {
+    position: relative;
+    left: 3%;
+    top: 23%;
+    width: 93%;
+    border-top: 1px solid;
+    border-bottom: 1px solid;
+    border-color: #373737;
+    color: white;
+}
+.bottom .table-small table {
+    border-collapse: collapse;
+    vertical-align: center;
+    width: 100%;
+    height: 7vh;
+}
+.bottom .table-small td {
+    padding-top: 1%;
+    text-align: center;
+    font-size: 120%;
+}
+.bottom .table-small .col1 .title {
+    font-weight: bold;
+    font-size: 110%;
+}
+.bottom .table-small .col1 {
+    text-align: left;
+    width: 38%;
+    color: #cdcdcd;
+}
+.bottom .table-small .col2 {
+    width: 9.5%;
+    font-size: 140%;
+    font-weight: bold;
+    background-color: #252525;
+    border-top: 0px;
+    border-bottom: 0px;
+}
+.bottom .table-small .col3 {
+    width: 26%;
+    color: #cdcdcd;
+}
+.bottom .table-small .col4 {
+    width: 15.7%;
+    color: #cdcdcd;
+}
+.bottom .table-small .col5 {
+    width: 10.3%;
+    color: #cdcdcd;
+}
+
+.bottom .pricing {
+    color: #cdcdcd;
+    position: relative;
+    left: 3.2%;
+    /* top: 31%; */
+    top: 30.5%;
+    font-size: 105%;
+    letter-spacing: 1.5px;
+    text-decoration: underline;
+}
+
+.bottom .mobile {
+    display: none;
+}
+body {
+    font-family: Arial, Helvetica;
+    margin: 0px;
+    background-color: #141414;
+} 
+
+
+@media screen and (max-width: 453px) {
+    .container {
+        background-color: #141414;
+        width: 100vw;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        flex-wrap: wrap;
+    }
+    .top {
+        display: flex;
+        flex-direction: column;
+        flex-wrap: wrap;
+    }
+    .top .left {
+        width: 100vw;
+    }
+    .top .left .title {
+        top: 0%;
+        font-size: 220%;
+    }
+    .top .left .title .text{
+        width: 100%;
+    }
+    .top .left .subtitle {
+        font-size: 85%;
+        left: 5%;
+        top: -0.5%;
+    }
+    .top .left .line {
+        top: 1%;
+        width: 120%;
+    }
+    .top .left .fees {
+        font-size: 107%;
+        top: 2.5%;
+        left: 4.5%;
+    }
+    .top .left .includes {
+        font-size: 100%;
+        top: 5%;
+        left: 5%
+    }
+    .top .left .list {
+        top: 3.7%;
+        left: 1.5%;
+        font-size: 105%;
+        margin-bottom: 22%
+    }
+
+    .top .right {
+        width: 100vw;
+    }
+    .top .right .title {
+        font-size: 225%;
+        top: 0.5%;
+        left: 5%;
+        margin-bottom: 0px;
+    }
+    .top .right .subtitle {
+        font-size: 86%;
+        top: 9%;
+        left: 5%;
+    }
+    .top .right .line {
+        width: 130%;
+        top: 12%;
+    }
+    .top .right .fees-text {
+        top: 18%;
+        left: 5%;
+    }
+    .top .right .fees-text .fees1 {
+        font-size: 106%;
+    }
+    .top .right .fees-text .fees2 {
+        font-size: 106%;
+        width: 100%;
+    }
+    .top .right .fees-text .small-text {
+        top: 3%;
+        font-size: 85%;
+    }
+
+    .middle .banner {
+        top: 14%;
+        left: 5.5%;
+        width: 89%;
+        height: 35%;
+        flex-direction: column;
+    }
+    .middle .banner .flex {
+        flex-direction: row-reverse;
+        gap: 26%
+    }
+    .middle .banner .flex .text {
+        top: 21.5%;
+        font-size: 106%;
+    }
+    .middle .banner .flex .diamond {
+        position: relative;
+        left: 2%;
+        background-position: 54% 23%;
+        background-size: 35%;
+        height: 5.53vh;
+        width: 4.3vh;
+    }
+    .middle .banner .learn-button {
+        position: relative;
+        display: flex;
+        top: -23%;
+        left: 4%;
+        letter-spacing: 0px;
+        width: 33%;
+        justify-content: center;
+        align-items:center;
+        border-width: 1px;
+    }
+    .middle .sign-up-button {
+        /* background-color: red; */
+        font-size: 100%;
+        left: 5%;
+        top: 21%;
+        height: 11%;
+        width: 37.5%;
+    }
+    .bottom .mobile {
+        display: block;
+    }
+    .bottom .table-big {
+        display: none;
+    }
+    .bottom .table-small {
+        display: none;
+    }
+    .bottom .mobile-compare {
+        position: relative;
+        display: block;
+        font-weight: bold;
+        font-style: italic;
+        font-size: 195%;
+        left: 5%;
+        top: 1%
+    }
+    .bottom .mobile-table-row1 {
+        position: relative;
+        top: 7%;
+        left: 5%;
+        width: 90%;
+        border-collapse: collapse;
+    }
+    .bottom .mobile-table-row1 table {
+        width: 100%;
+        text-align: center;
+        border-color: #2f2f2f;
+    }
+    .bottom .mobile-table-row1 td {
+        border-bottom: 1px solid;
+    }
+    .bottom .mobile-table-row1 .us {
+        border-bottom: 0px;
+    }
+    .bottom .max {
+        position: relative;
+        top: 12%;
+        font-size: 85%;
+        left: 5.5%;
+        letter-spacing: 1.2px;
+    }
+    .bottom .mobile-table-row2 table {
+        width: 100%;
+        text-align: center;
+        border-collapse: collapse;
+    }
+    .bottom .mobile-table-row2 {
+        position: relative;
+        top: 14%;
+        left: 5%;
+        width: 90%;
+    }
+    .bottom .mobile-table-row2 td {
+        height: 45px;
+        border-top: 1px solid;
+        border-bottom: 1px solid;
+        border-color: #2f2f2f;
+    }
+    .bottom .post {
+        position: relative;
+        top: 17%;
+        font-size: 85%;
+        left: 5.5%;
+        letter-spacing: 1.2px;
+    }
+    .bottom .mobile-table-row3 table {
+        width: 100%;
+        text-align: center;
+        border-collapse: collapse;
+    }
+    .bottom .mobile-table-row3 {
+        position: relative;
+        left: 5%;
+        top: 19%;
+        width: 90%;
+    }
+    .bottom .mobile-table-row3 td {
+        height: 46px;
+        border-top: 1px solid;
+        border-bottom: 1px solid;
+        border-color: #2f2f2f;
+    }
+    .bottom .volume {
+        position: relative;
+        font-size: 85%;
+        left: 5.5%;
+        letter-spacing: 1.2px;
+        top: 22.5%;
+    }
+    .bottom .mobile-table-row4 table {
+        width: 100%;
+        text-align: center;
+        border-collapse: collapse;
+    }
+    .bottom .mobile-table-row4 {
+        position: relative;
+        left: 5%;
+        top: 24.5%;
+        width: 90%;
+    }
+    .bottom .mobile-table-row4 td {
+        height: 46px;
+        border-top: 1px solid;
+        border-bottom: 1px solid;
+        border-color: #2f2f2f;
+    }
+    .bottom .line {
+        color: #2e2e2e;
+        position: relative;
+        top: 30%;
+        left: 0%;
+        width: 90%;
+    }
+    .bottom .grey {
+        background-color: #252525;
+    }
+    .bottom .mobile-table-small {
+        position: relative;
+        top: 31%;
+        left: 5%;
+    }
+    .bottom .mobile-table-small .title {
+        position: relative;
+        margin: 0px;
+        letter-spacing: 1px;
+        line-height: 150%;
+    }
+    .bottom .mobile-table-small .text {
+        position: relative;
+        font-size: 95%;
+        line-height: 120%;
+        margin-bottom: 4%;
+    }
+    .bottom .mobile-table-small table {
+        position: relative;
+        width: 90%;
+        text-align: center;
+        border-collapse: collapse;
+    }
+    .bottom .mobile-table-small td {
+        height: 75px;
+        border-top: 1px solid;
+        border-bottom: 1px solid;
+        border-color: #2f2f2f;
+    }
+    .bottom .pricing {
+        position: relative;
+        top: 36%;
+        left: 5.5%;
+        font-size: 76%;
+    }
+
+    .bottom .col1 {
+        width: 18%;
+    }
+    .bottom .col2 {
+        width: 35%;
+    }
+    .bottom .col3 {
+        width: 28%;
+    }
+    .bottom .col4 {
+        width: 19%;
+    }
+}
+

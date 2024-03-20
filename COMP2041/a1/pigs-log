@@ -1,0 +1,23 @@
+#!/bin/dash
+
+# pig directory doesnt exist
+if ! [ -d ".pig" ]
+then 
+    echo "pigs-log: error: pigs repository directory .pig not found" 1>&2
+    exit 1
+fi
+
+# given too many arguments
+if ! [ $# -eq 0 ]
+then
+    echo "usage: pigs-log" 1>&2
+    exit 1
+fi
+
+commits=".pig/commits.txt"
+if ! [ -f "$commits" ]
+then
+    exit 1
+fi
+
+tac "$commits"

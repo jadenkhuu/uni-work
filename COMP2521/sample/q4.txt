@@ -1,0 +1,14 @@
+Question 4
+
+Which of the given algorithms could have been used to construct the
+mininum spanning tree? Justify your answer.
+
+Kruskals algorithms
+
+Out of all the algorithms, only kruskals and prims can be used to find
+a minimum spanning tree. The difference between kruskals and prims
+is that prims algorithm requires each new added edge to be added onto
+the existing added edges.
+
+Seen in the first 2 steps, A-E and C-D, the new edge C-D is added but
+not connected to the existing edges

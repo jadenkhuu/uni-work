@@ -1,0 +1,20 @@
+Question 7
+
+(a) What would the array look like after each execution of the inner 
+    for loop?
+
+    s o r t i n g i s a w e s o m e (initial state)
+
+    o s | r t | i n | g i | a s | e w | o s | e m
+    
+    o r s t | g i i n | a e s w | e m o s
+
+    g i i n o r s t | a e e m o s s w
+
+    a e e g i i m n o o r s s s t w
+
+(b) Expain the purpose of the statement `len = min(m, hi - (i + m) + 1);` 
+
+    It starts at the smallest amount possible and keeps adding together until it is the 
+    legnth of the full array of 16
+

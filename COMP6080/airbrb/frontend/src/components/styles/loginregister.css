@@ -1,0 +1,37 @@
+.page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    height: 100vh;
+    background-color: #54AB79;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.login-block {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+
+    height: 500px;
+    width: 350px;
+
+    background-color: white;
+    border: 1px black solid;
+    border-radius: 5px;
+}
+
+.register-block {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+
+    height: 600px;
+    width: 350px;
+
+    background-color: white;
+    border: 1px black solid;
+    border-radius: 5px;
+}

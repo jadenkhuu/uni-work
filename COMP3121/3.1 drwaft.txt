@@ -1,0 +1,21 @@
+3.1
+Consider an algorithm which will compute the post-order traversal of an binary search tree (BST) given an array of its pre-order traversal, P. This algorithm must also run in O(n) time.
+This algorithm will begin by initialising an empty stack (stack) and an empty array for the post-order traversal (postArray). A stack would be suitable because of its last-in-first-out properties which will allow the algorithm to effectively keep track of the order and path of the pre-order traversal as well as what values have yet to be added to the post-order traversal. 
+First, the algorithm will push the first element of P (the root node of BST) onto the stack. This is done as the first element of a pre-order traversal is always the root node and is always the last element of a post-order traversal.
+Then, for the remaining elements in P, the algorithm will iterate through the rest of the array and for each element and have a comparative operation which checks these conditions: 
+	If the element is lesser than the value on the top of the stack, push it onto stack and go to the next iteration.
+	The element being lesser shows that it is a left child of the value in the stack, meaning it will be traversed first in a post-order traversal.
+	If the element is greater than value on the top of the stack, pop that stack value and append it to postArray. Additionally, push the element onto the stack.
+	This is done because an element greater than the top of the stack must mean that it is right child of a value in the stack that has yet to be added to postArray.
+	Thus, the top of the stack is popped and appended to the post-order traversal and the element is pushed onto the stack.
+Overall, this process involves popping elements from the stack until the parent of the current element is found and append each popped element into postArray.
+Once all the remaining elements of P have been iterated through, the algorithm will pop all the remaining elements from stack and append them to postArray in reverse order. Appending the remaining elements in reverse order will conclude the post -order traversal because the remaining elements are the left children of the previously popped elements in the algorithm.
+This should result in postArray which holds the post-order traversal of the BST. This algorithm will take O(n) time as each node is pushed onto stack exactly once and popped at most once.
+
+1. store the first element in the array in a variable as it is the root node of the tree
+2. starting from the 2nd index of the array, iterate through the array and for each element, x, the algo will do the following:
+- if the stack is empty, push x onto the stack
+- while the stack is not empty and if x is larger than the top element of the stack, pop the stack and append the popped element to postArray. push x onto the stack.
+3. when there are no more elements of P to iterate, and stack still has elements, pop all remaining elements off the stack and append to postArray in the order they were popped
+4. reverse the output array and append the stored root to get post-order traversal
+Pop the elements on the top of the stack until x becomes the immediate right child of the first element in the stack (the root), to reiterate, repeatedly pop the elements from the stack until x is the next immediate value larger than the root.

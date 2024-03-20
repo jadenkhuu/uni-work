@@ -1,0 +1,45 @@
+Question 3
+
+(a) How many times (exact number) is the statement in line 3 executed 
+    (initialization of components)?
+    
+    Answer: 
+    'n' 
+
+
+(b) How many times (exact number) is the statement in line 6 executed 
+    (deleting an edge from the list of edges)?
+    
+    Answer: 'n-1'
+
+
+(c) What is the time complexity (in big-O notation) of testing whether
+    two nodes are in different components?
+
+    Answer: O(n^2)
+
+
+(d) In the worst case, how many times (exact number) is the statement in
+    line 8 executed (merging two components)? Justify your answer.
+
+    Answer: 
+    In the worst case scenario, line 8 is executed n-1 times. 
+    This will occur if one city with an array index of 0 is connected to
+    every other city, then line 8 will be forced to change the index value 
+    of every other city to 0 since it is the lowest index. Thus, if there are
+    'n' cities, the worst case scenario would execute line 8 n-1 times.
+
+
+(e) What is the worst case time complexity (in big-O notation) of
+    merging two components into a single component? Justify your answer.
+
+    Answer: O(n)
+
+
+(f) What is the overall worst case time complexity (in big-O notation)
+    of this algorithm? Ignore the complexity of lines 1 and 4. Justify
+    your answer.
+
+    Answer: number of cities
+
+
