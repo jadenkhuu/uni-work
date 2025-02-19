@@ -1,0 +1,12 @@
+/home/talk19/COMP6991/ws01/target/debug/deps/libgif-d61d33c113e277e9.rmeta: /home/talk19/.cargo/registry/src/index.crates.io-6f17d22bba15001f/gif-0.13.1/src/lib.rs /home/talk19/.cargo/registry/src/index.crates.io-6f17d22bba15001f/gif-0.13.1/src/traits.rs /home/talk19/.cargo/registry/src/index.crates.io-6f17d22bba15001f/gif-0.13.1/src/common.rs /home/talk19/.cargo/registry/src/index.crates.io-6f17d22bba15001f/gif-0.13.1/src/reader/mod.rs /home/talk19/.cargo/registry/src/index.crates.io-6f17d22bba15001f/gif-0.13.1/src/reader/decoder.rs /home/talk19/.cargo/registry/src/index.crates.io-6f17d22bba15001f/gif-0.13.1/src/reader/converter.rs /home/talk19/.cargo/registry/src/index.crates.io-6f17d22bba15001f/gif-0.13.1/src/encoder.rs /home/talk19/.cargo/registry/src/index.crates.io-6f17d22bba15001f/gif-0.13.1/src/../README.md
+
+/home/talk19/COMP6991/ws01/target/debug/deps/gif-d61d33c113e277e9.d: /home/talk19/.cargo/registry/src/index.crates.io-6f17d22bba15001f/gif-0.13.1/src/lib.rs /home/talk19/.cargo/registry/src/index.crates.io-6f17d22bba15001f/gif-0.13.1/src/traits.rs /home/talk19/.cargo/registry/src/index.crates.io-6f17d22bba15001f/gif-0.13.1/src/common.rs /home/talk19/.cargo/registry/src/index.crates.io-6f17d22bba15001f/gif-0.13.1/src/reader/mod.rs /home/talk19/.cargo/registry/src/index.crates.io-6f17d22bba15001f/gif-0.13.1/src/reader/decoder.rs /home/talk19/.cargo/registry/src/index.crates.io-6f17d22bba15001f/gif-0.13.1/src/reader/converter.rs /home/talk19/.cargo/registry/src/index.crates.io-6f17d22bba15001f/gif-0.13.1/src/encoder.rs /home/talk19/.cargo/registry/src/index.crates.io-6f17d22bba15001f/gif-0.13.1/src/../README.md
+
+/home/talk19/.cargo/registry/src/index.crates.io-6f17d22bba15001f/gif-0.13.1/src/lib.rs:
+/home/talk19/.cargo/registry/src/index.crates.io-6f17d22bba15001f/gif-0.13.1/src/traits.rs:
+/home/talk19/.cargo/registry/src/index.crates.io-6f17d22bba15001f/gif-0.13.1/src/common.rs:
+/home/talk19/.cargo/registry/src/index.crates.io-6f17d22bba15001f/gif-0.13.1/src/reader/mod.rs:
+/home/talk19/.cargo/registry/src/index.crates.io-6f17d22bba15001f/gif-0.13.1/src/reader/decoder.rs:
+/home/talk19/.cargo/registry/src/index.crates.io-6f17d22bba15001f/gif-0.13.1/src/reader/converter.rs:
+/home/talk19/.cargo/registry/src/index.crates.io-6f17d22bba15001f/gif-0.13.1/src/encoder.rs:
+/home/talk19/.cargo/registry/src/index.crates.io-6f17d22bba15001f/gif-0.13.1/src/../README.md:
