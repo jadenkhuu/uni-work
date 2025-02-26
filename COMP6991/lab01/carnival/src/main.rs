@@ -45,5 +45,7 @@ fn move_ticket(mut from: Person, mut to: Person) -> (Person, Person) {
     // the ticket should be moved to the "from" person
     // to the 'to' person
     // for now, return the people UNCHANGED
+    to.ticket = from.ticket.clone();
+    from.ticket = None;
     (from, to)
 }
