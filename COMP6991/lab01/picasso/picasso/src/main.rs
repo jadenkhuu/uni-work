@@ -5,5 +5,5 @@ use arg::Args;
 fn main() {
     println!("Hello, world!");2
     
-    let mut file = FIle::open("")
+    let mut file = File::open("")
 }
