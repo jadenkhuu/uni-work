@@ -25,19 +25,18 @@ fn compute_tribonacci(
     // inside the `TribonacciError` struct
     error_msg: String,
 ) -> Result<(), TribonacciError> {
-    // TODO: complete this function!
-    let mut values: Vec<u128> = vec![1, 1, 1]
+    let size = match size {
+        Ok(n) if n > 0 => n,
+        _ => return Err(TribonacciError(error_msg)),
+    };
 
-    if size == 1 || size == 2 || size == 3 {
-        while values.len() =! size {
-            values.pop();
-        }
-        println(values);
+    let mut tribonacci = vec![1, 1, 1];
+
+    for i in 3..size {
+        let next_value = tribonacci[i - 1] + tribonacci[i - 2] + tribonacci[i - 3];
+        tribonacci.push(next_value);
     }
-    // for i in 0..size - 1 {
-        
-    //     let res = 
+    println!("Values: {:?}", &tribonacci[..size]);
 
-    //     values.push(res)
-    // }
+    Ok(())
 }
