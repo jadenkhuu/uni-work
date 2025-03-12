@@ -18,10 +18,6 @@ fn uppercase(src: &str) -> String {
     let mut destination = String::new();
 
     for c in src.chars() {
-        // this doesn't work either!!
-        // what type does to_uppercase return?
-        // what type does push expect?
-        // Food for thought, what exactly is src.chars()?
         // TODO: read the docs!
         for upper_char in c.to_uppercase() {
             destination.push(upper_char);
