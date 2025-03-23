@@ -8,7 +8,7 @@ use require_lifetimes::require_lifetimes;
 /// assert_eq!(identity(&x), &x);
 /// ````
 #[require_lifetimes(!)]
-pub fn identity(number: &i32) -> &i32 {
+pub fn identity<'lifetime1>(number: &'lifetime1 i32) -> &'lifetime1 i32 {
     number
 }
 
@@ -24,7 +24,7 @@ pub fn identity(number: &i32) -> &i32 {
 /// assert_eq!(splitted, vec!["this", "is", "a", "test"]);
 /// ```
 #[require_lifetimes(!)]
-pub fn split(text: &str, delimiter: &str) -> Vec<&str> {
+pub fn split<'lifetime2, 'lifetime3>(text: &'lifetime2 str, delimiter: &'lifetime3 str) -> Vec<&'lifetime2 str> {
     let mut last_split = 0;
     let mut matches: Vec<&str> = vec![];
     for i in 0..text.len() {

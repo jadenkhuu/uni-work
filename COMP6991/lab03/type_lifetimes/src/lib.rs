@@ -1,18 +1,18 @@
 use std::collections::HashSet;
 
-// You will need to add lifetimes 
+// You will need to add lifetimes
 // to this struct (and the fields)
 #[derive(Debug, Default)]
-pub struct Difference {
-    first_only: Vec<&str>,
-    second_only: Vec<&str>,
+pub struct Difference<'l1, 'l2> {
+    first_only: Vec<&'l1 str>,
+    second_only: Vec<&'l2 str>,
 }
 
 // You will need to add lifetimes
 // to the function and the parameters
-pub fn find_difference(sentence1: &str, sentence2: &str) -> Difference {
+pub fn find_difference<'l1, 'l2>(sentence1: &'l1 str, sentence2: &'l2 str) -> Difference<'l1, 'l2> {
 
-    // DO NOT MODIFY BELOW THIS LINE 
+    // DO NOT MODIFY BELOW THIS LINE
 
     let sentence_1_words: HashSet<&str> = sentence1.split(" ").collect();
     let sentence_2_words: HashSet<&str> = sentence2.split(" ").collect();
