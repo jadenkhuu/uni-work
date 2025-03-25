@@ -9,8 +9,8 @@ use itertools::Itertools;
 // use std::collections::HashMap;
 
 use clap::Parser;
-use ortalib::{Chips, Mult, Round, PokerHand};
-use ortalib::{Card, Suit, Rank};
+use ortalib::{Chips, Mult, Round, PokerHand, Card};
+// use ortalib::{Suit, Rank};
 
 #[derive(Parser)]
 struct Opts {
@@ -23,11 +23,6 @@ struct Opts {
 fn main() -> Result<(), Box<dyn Error>> {
     let opts = Opts::parse();
     let round = parse_round(&opts)?;
-
-    // Debug to print sorted lists by rank and suit
-    // println!("{:?}", sorted_by_rank(&round));
-    // println!("{:?}", sorted_by_suit(&round));
-
     let (chips, mult) = score(round);
 
     println!("{}", (chips * mult).floor());
@@ -46,108 +41,126 @@ fn parse_round(opts: &Opts) -> Result<Round, Box<dyn Error>> {
     Ok(round)
 }
 
-// pub enum PokerHand {
-//     HighCard = 0,
-//     Pair = 1,
-//     TwoPair = 2,
-//     ThreeOfAKind = 3,
-//     Straight = 4,
-//     Flush = 5,
-//     FullHouse = 6,
-//     FourOfAKind = 7,
-//     StraightFlush = 8,
-//     FiveOfAKind = 9,
-//     FlushHouse = 10,
-//     FlushFive = 11,
-// }
 fn score(round: Round) -> (Chips, Mult) {
-    // let poker_hand_made = make_hand(&round);
     make_hand(&round)
-
-    // debug print hand made
-    // println!("{:?}", poker_hand_made);
-
-//     let (c, m) = match &poker_hand_made{
-//         PokerHand::StraightFlush => PokerHand::StraightFlush.hand_value(),
-//         PokerHand::FourOfAKind => PokerHand::FourOfAKind.hand_value(),
-//         PokerHand::Flush => PokerHand::Flush.hand_value(),
-//         PokerHand::Straight => PokerHand::Straight.hand_value(),
-//         PokerHand::ThreeOfAKind => calc_triple(&round),
-//         PokerHand::TwoPair => PokerHand::TwoPair.hand_value(),
-//         PokerHand::Pair => calc_pair(&round),
-//         _ => calc_highcard(&round),
-//     };
-//     (c, m)
 }
 
 // Takes the cards_played and finds what poker hand it is
-// Returns poker hand as PokerHand
+// Calculates hand value and returns
 fn make_hand(round: &Round) -> (f64, f64) {
-    // if check_triple(&sorted_by_rank(round)) {
-    //     calc_triple(&round)
-    // } else
-    if check_pair(&sorted_by_rank(round)) {
-        // calc_pair(&round)
-        (1.0, 1.0)
-    } else {
-        calc_highcard(&round)
+    let cards_by_rank = &sorted_by_rank(round);
+    let cards_by_suit = &sorted_by_suit(round);
+
+    // Debugging prints
+    println!("{:?}", cards_by_rank);
+    println!("{:?}", cards_by_suit);
+
+    if check_straight(&cards_by_rank) {
+        println!("Straight");
+        calc_straight(&cards_by_rank)
     }
+    else if check_triple(&cards_by_rank) {
+        println!("Three of a Kind");
+        calc_triple(&cards_by_rank)
+    }
+    else if check_twopair(&cards_by_rank) {
+        println!("Two Pair");
+        calc_twopair(&cards_by_rank)
+    }
+    else if check_pair(&cards_by_rank) {
+        println!("Pair");
+        calc_pair(&cards_by_rank)
+    }
+    else {
+        println!("High card");
+        calc_highcard(&cards_by_rank)
+    }
+
+    // Order
+    // Straight Flush
+    // Four of a Kind
+    // Full House
+    // Flush
+    // Straight
+    // Three of a Kind x
+    // Two Pair x
+    // Pair x
+    // High Card x
+
 }
 
-// HIGH CARD //
-// Calculates (Chips, Mult) of a High Card hand
-fn calc_highcard(round: &Round) -> (f64, f64) {
-    let (c, m) = PokerHand::HighCard.hand_value();
-    (c + sorted_by_rank(round)[0].rank.rank_value(), m)
+fn check_straight(cards: &[Card]) -> bool {
+
+    // ace can only be at the start or end of a straight,
+    todo!()
+}
+fn calc_straight(cards: &[Card]) -> (f64, f64) {
+    let (c, m) = PokerHand::Straight.hand_value();
+    (c, m)
+}
+
+// THREE OF A KIND //
+// Checks for Three of a kind | Calculates (Chips, Mult) of Triple
+fn check_triple(cards: &[Card]) -> bool {
+    cards.windows(3)
+        .any(|pair| pair[0].rank == pair[1].rank && pair[1].rank == pair[2].rank)
+}
+fn calc_triple(cards: &[Card]) -> (f64, f64) {
+    let (c, m) = PokerHand::ThreeOfAKind.hand_value();
+    let pairs = cards.windows(3)
+    .filter(|pair| pair[0].rank == pair[1].rank && pair[1].rank == pair[2].rank) // Find pairs with the same rank
+    .map(|pair| pair[0]) // Extract the rank of each pair
+    .collect::<Vec<_>>();
+
+    // debugging
+    println!("{:?}", pairs);
+
+    (c + pairs[0].rank.rank_value() * 3.0, m)
+}
+
+// TWO PAIR //
+// Checks for Two Pair | Calculate (Chips, Mult) of a Two Pair
+fn check_twopair(cards: &[Card]) -> bool {
+    let pairs = cards.windows(2)
+    .filter(|pair| pair[0].rank == pair[1].rank) // Find pairs with the same rank
+    .map(|pair| pair[0]) // Extract the rank of each pair
+    .collect::<Vec<_>>(); // Collect ranks of pairs into a vector
+
+    println!("{:?}", pairs);
+    pairs.len() == 2
+}
+fn calc_twopair(cards: &[Card]) -> (f64, f64) {
+    let (c, m) = PokerHand::TwoPair.hand_value();
+    let pairs = cards.windows(2)
+    .filter(|pair| pair[0].rank == pair[1].rank) // Find pairs with the same rank
+    .map(|pair| pair[0]) // Extract the rank of each pair
+    .collect::<Vec<_>>();
+
+    (c + pairs[0].rank.rank_value() + pairs[1].rank.rank_value(), m)
 }
 
 // PAIR //
 // Checks for Pair | Calculate (Chips, Mult) of a pair
 fn check_pair(cards: &[Card]) -> bool {
-    cards.iter()
-        .chunk_by(|card| card.rank) // Group by rank
-        .into_iter()
-        .any(|(_, group)| group.count() == 2)
+    cards.windows(2)
+        .any(|pair| pair[0].rank == pair[1].rank)
 }
-fn calc_pair(round: &Round) -> (f64, f64) {
-    // hand value mult
+fn calc_pair(cards: &[Card]) -> (f64, f64) {
     let (c, m) = PokerHand::Pair.hand_value();
-    let cards = &sorted_by_rank(round);
+    let paired_card = cards.windows(2)
+        .find(|pair| pair[0].rank == pair[1].rank)
+        .map(|pair| pair[0])
+        .unwrap();
 
-    todo!()
+    (c + paired_card.rank.rank_value() + paired_card.rank.rank_value(), m)
 }
 
-// TWO PAIR //
-// fn check_twopair(cards: &[Card]) -> bool {
-//     let pair_count = cards.iter()
-//     .map(|card| card.rank)
-//     .sorted()
-//     .chunk_by(|&rank| rank)
-//     .into_iter()
-//     .filter(|(_, group)| group.clone().count() == 2)
-//     .count();
-
-// pair_count == 2
-// // returns true if 2 pairs exist
-// }
-// fn calc_twopair(round: &Round) -> (f64, f64) {
-
-//     todo!()
-// }
-
-// THREE OF A KIND //
-// Checks for Three of a kind | Calculates (Chips, Mult) of Triple
-// fn check_triple(cards: &[Card]) -> bool {
-//     cards.iter()
-//     .map(|card| card.rank)
-//     .sorted()
-//     .chunk_by(|&rank| rank)
-//     .into_iter()
-//     .any(|(_, group)| group.count() == 3)
-// }
-// fn calc_triple(round: &Round) -> (f64, f64) {
-//     todo!()
-// }
+// HIGH CARD //
+// Calculates (Chips, Mult) of a High Card hand
+fn calc_highcard(cards: &[Card]) -> (f64, f64) {
+    let (c, m) = PokerHand::HighCard.hand_value();
+    (c + cards[0].rank.rank_value(), m)
+}
 
 // Sorts in descending order by rank
 fn sorted_by_rank(round: &Round) -> Vec<Card> {
