@@ -1,16 +1,13 @@
 use std::{
-    error::Error,
-    fs::File,
-    io::{Read, stdin},
-    path::{Path, PathBuf},
+    collections::HashMap, error::Error, fs::File, io::{stdin, Read}, ops::Mul, path::{Path, PathBuf}
 };
 
 use itertools::Itertools;
 // use std::collections::HashMap;
 
 use clap::Parser;
-use ortalib::{Chips, Mult, Round, PokerHand, Card};
-use ortalib::{Rank};
+use ortalib::{Chips, Mult, Round, PokerHand, Card, Rank, Enhancement};
+use serde_yaml::Number;
 
 #[derive(Parser)]
 struct Opts {
@@ -42,78 +39,107 @@ fn parse_round(opts: &Opts) -> Result<Round, Box<dyn Error>> {
 }
 
 fn score(round: Round) -> (Chips, Mult) {
-    make_hand(&round)
+    // make_hand(&round)
+    let mut score = make_hand(&round);
+    score = apply_enhancements(&round, score);
+    score
+}
+
+fn apply_enhancements(round: &Round, mut score: (Chips, Mult)) -> (Chips, Mult) {
+    for card in &round.cards_played {
+        if let Some(enhancement) = &card.enhancement {
+            match enhancement {
+                Enhancement::Bonus => score.0 += 30.0,
+                Enhancement::Mult => score.1 += 4.0,
+                Enhancement::Glass => score.1 += 2.0,
+                Enhancement::Steel => score.1 += 1.5,
+                _ => {}
+            }
+        }
+    }
+    score
 }
 
 // Takes the cards_played and finds what poker hand it is
 // Calculates hand value and returns
-fn make_hand(round: &Round) -> (f64, f64) {
+fn make_hand(round: &Round) -> (Chips, Mult) {
     let cards_by_rank = &sorted_by_rank(round);
     let cards_by_suit = &sorted_by_suit(round);
 
-// Debugging prints
-    println!("Cards played: {:?}", round.cards_played);
-    println!("Cards In hand: {:?}", round.cards_held_in_hand);
-    // println!("{:?}", cards_by_rank);
-    // println!("{:?}", cards_by_suit);
+    // Debugging prints
+    // println!("Cards played: {:?}", round.cards_played);
+    // println!("Cards In hand: {:?}", round.cards_held_in_hand);
+    // println!("by rank {:?}", cards_by_rank);
+    // println!("by suit {:?}", cards_by_suit);
 
-    if check_straightflush(&cards_by_rank) {
-        println!("Straight Flush");
-        five_card_calc(&cards_by_rank, PokerHand::StraightFlush)
+    if check_flushfive(&cards_by_rank) {
+        // println!("Flush Five");
+        calc_five_cards(&cards_by_rank, PokerHand::FlushFive)
+    }
+    else if check_flushhouse(&cards_by_rank) {
+        // println!("Full House");
+        calc_five_cards(&cards_by_rank, PokerHand::FlushHouse)
+    }
+    else if check_five(&cards_by_rank) {
+        // println!("Five of a Kind");
+        calc_five_cards(&cards_by_rank, PokerHand::FiveOfAKind)
+    }
+    else if check_straightflush(&cards_by_rank) {
+        // println!("Straight Flush");
+        calc_five_cards(&cards_by_rank, PokerHand::StraightFlush)
     }
     else if check_quad(&cards_by_rank) {
-        println!("Four of a Kind");
-        five_card_calc(&cards_by_rank, PokerHand::FourOfAKind)
+        // println!("Four of a Kind");
+        // calc_quad(&cards_by_rank)
+        calc_duplicates(&cards_by_rank, 4, PokerHand::FourOfAKind)
     }
     else if check_fullhouse(&cards_by_rank) {
-        println!("Fullhouse");
-        five_card_calc(&cards_by_rank, PokerHand::FullHouse)
+        // println!("Fullhouse");
+        calc_five_cards(&cards_by_rank, PokerHand::FullHouse)
     }
     else if check_flush(&cards_by_suit) {
-        println!("Flush");
-        five_card_calc(&cards_by_suit, PokerHand::Flush)
+        // println!("Flush");
+        calc_five_cards(&cards_by_suit, PokerHand::Flush)
     }
     else if check_straight(&cards_by_rank) {
-        println!("Straight");
-        five_card_calc(&cards_by_rank, PokerHand::Straight)
+        // println!("Straight");
+        calc_five_cards(&cards_by_rank, PokerHand::Straight)
     }
     else if check_triple(&cards_by_rank) {
-        println!("Three of a Kind");
-        calc_triple(&cards_by_rank)
+        // println!("Three of a Kind");
+        // calc_triple(&cards_by_rank)
+        calc_duplicates(&cards_by_rank, 3, PokerHand::ThreeOfAKind)
     }
     else if check_twopair(&cards_by_rank) {
-        println!("Two Pair");
+        // println!("Two Pair");
         calc_twopair(&cards_by_rank)
     }
     else if check_pair(&cards_by_rank) {
-        println!("Pair");
-        calc_pair(&cards_by_rank)
+        // println!("Pair");
+        // calc_pair(&cards_by_rank)
+        calc_duplicates(&cards_by_rank, 2, PokerHand::Pair)
     }
     else {
-        println!("High card");
+        // println!("High card");
         calc_highcard(&cards_by_rank)
     }
-
-    // Order
-    // Straight Flush x
-    // Four of a Kind x
-    // Full House x
-    // Flush x
-    // Straight x
-    // Three of a Kind x
-    // Two Pair x
-    // Pair x
-    // High Card x
-
 }
 
-// GENERIC CALCULATION FOR FULL 5 CARD HAND //
-fn five_card_calc(cards: &[Card], hand_type: PokerHand) -> (f64, f64) {
-    let (mut c, m) = hand_type.hand_value();
-    for i in 0..cards.len() {
-        c = c + cards[i].rank.rank_value();
-    }
-    (c, m)
+// FLUSH FIVE //
+fn check_flushfive(cards: &[Card]) -> bool {
+    if cards.len() < 5 { return false; }
+    check_five(cards) && check_flush(cards)
+}
+
+// FLUSH HOUSE //
+fn check_flushhouse(cards: &[Card]) -> bool {
+    if cards.len() < 5 { return false; }
+    check_fullhouse(cards) && check_flush(cards)
+}
+
+// FIVE OF A KIND //
+fn check_five(cards: &[Card]) -> bool {
+    duplicate_cards(cards).values().any(|&count| count == 5)
 }
 
 // STRAIGHT FLUSH //
@@ -121,34 +147,27 @@ fn check_straightflush(cards: &[Card]) -> bool {
     check_straight(cards) && check_flush(cards)
 }
 
-// Four of a Kind //
-// Checks for Four of a Kind
+// FOUR OF A KIND //
 fn check_quad(cards: &[Card]) -> bool {
-    cards.windows(4)
-        .any(|pair| pair[0].rank == pair[1].rank && pair[1].rank == pair[2].rank)
+    duplicate_cards(cards).values().any(|&count| count == 4)
 }
 
 // FULL HOUSE //
-// Checks for Full House
 fn check_fullhouse(cards: &[Card]) -> bool {
+    if cards.len() < 5 { return false; }
     check_triple(cards) && check_pair(cards)
 }
 
 // FLUSH //
-// Checks for Flush
 fn check_flush(cards: &[Card]) -> bool {
     if cards.len() < 5 { return false; }
-
-    for i in 0..cards.len() - 1 {
-        if cards[i].suit != cards[i + 1].suit {
-            return false;
-        }
-    }
-    true
+    cards
+    .first()
+    .map(|first_card| cards.iter().all(|card| card.suit == first_card.suit))
+    .unwrap_or(false)
 }
 
 // STRAIGHT //
-// Checks for Straight
 fn check_straight(cards: &[Card]) -> bool {
     if cards.len() < 5 { return false; }
 
@@ -168,65 +187,85 @@ fn check_straight(cards: &[Card]) -> bool {
 }
 
 // THREE OF A KIND //
-// Checks for Three of a kind | Calculates (Chips, Mult) of Triple
 fn check_triple(cards: &[Card]) -> bool {
-    cards.windows(3)
-        .any(|pair| pair[0].rank == pair[1].rank && pair[1].rank == pair[2].rank)
-}
-fn calc_triple(cards: &[Card]) -> (f64, f64) {
-    let (c, m) = PokerHand::ThreeOfAKind.hand_value();
-    let pairs = cards.windows(3)
-    .filter(|pair| pair[0].rank == pair[1].rank && pair[1].rank == pair[2].rank) // Find pairs with the same rank
-    .map(|pair| pair[0]) // Extract the rank of each pair
-    .collect::<Vec<_>>();
-
-    (c + pairs[0].rank.rank_value() * 3.0, m)
+    duplicate_cards(cards).values().any(|&count| count == 3)
 }
 
 // TWO PAIR //
-// Checks for Two Pair | Calculate (Chips, Mult) of a Two Pair
 fn check_twopair(cards: &[Card]) -> bool {
-    let pairs = cards.windows(2)
-    .filter(|pair| pair[0].rank == pair[1].rank) // Find pairs with the same rank
-    .map(|pair| pair[0]) // Extract the rank of each pair
-    .collect::<Vec<_>>(); // Collect ranks of pairs into a vector
-    pairs.len() == 2
+    duplicate_cards(cards).values().filter(|&&count| count == 2).count() == 2
 }
-fn calc_twopair(cards: &[Card]) -> (f64, f64) {
+fn calc_twopair(cards: &[Card]) -> (Chips, Mult) {
     let (c, m) = PokerHand::TwoPair.hand_value();
+
     let pairs = cards.windows(2)
-    .filter(|pair| pair[0].rank == pair[1].rank) // Find pairs with the same rank
-    .map(|pair| pair[0]) // Extract the rank of each pair
+    .filter(|pair| pair[0].rank == pair[1].rank)
+    .map(|pair| pair[0])
     .collect::<Vec<_>>();
 
-    (c + pairs[0].rank.rank_value() + pairs[1].rank.rank_value(), m)
+    (c + pairs[0].rank.rank_value() * 2.0 + pairs[1].rank.rank_value() * 2.0, m)
 }
+
+// fn calc_twopair(cards: &[Card]) -> (Chips, Mult) {
+//     let (c, m) = PokerHand::TwoPair.hand_value();
+
+//     let two_pairs: Vec<_> = cards.iter()
+//         .map(|card| card.rank)
+//         .filter(|&rank| cards.iter().filter(|card| card.rank == rank).count() >= 2)
+//         .collect();
+
+//     let unique_pairs: Vec<_> = two_pairs.into_iter().collect::<std::collections::HashSet<_>>().into_iter().collect();
+
+//     if unique_pairs.len() == 2 {
+//         let pair_value = unique_pairs.iter().map(|&rank| rank.rank_value()).sum::<f64>();
+//         return (c + pair_value * 2.0, m);
+//     }
+
+//     (0.0, m) // Or some other error handling logic if needed
+// }
 
 // PAIR //
-// Checks for Pair | Calculate (Chips, Mult) of a pair
 fn check_pair(cards: &[Card]) -> bool {
-    cards.windows(2)
-        .any(|pair| pair[0].rank == pair[1].rank)
-}
-fn calc_pair(cards: &[Card]) -> (f64, f64) {
-    let (c, m) = PokerHand::Pair.hand_value();
-    let paired_card = cards.windows(2)
-        .find(|pair| pair[0].rank == pair[1].rank)
-        .map(|pair| pair[0])
-        .unwrap();
-
-    (c + paired_card.rank.rank_value() * 2.0, m)
+    duplicate_cards(cards).values().any(|&count| count == 2)
 }
 
 // HIGH CARD //
-// Calculates (Chips, Mult) of a High Card hand
-fn calc_highcard(cards: &[Card]) -> (f64, f64) {
+fn calc_highcard(cards: &[Card]) -> (Chips, Mult) {
     let (c, m) = PokerHand::HighCard.hand_value();
     (c + cards[0].rank.rank_value(), m)
 }
 
+//// HELPER FUNCTIONS ////
+// Puts duplicate cards in hash map to help make hand
+fn duplicate_cards(cards: &[Card]) -> HashMap<i32, usize> {
+    let mut card_count = HashMap::new();
+    for card in cards {
+        *card_count.entry(rank_to_num(&card.rank)).or_insert(0) += 1;
+    }
+    card_count
+}
 
-// HELPER FUNCTIONS //
+// Variable calc for duplicate cards (Eg pairs, triples, quads)
+fn calc_duplicates(cards: &[Card], num: usize, hand_type: PokerHand) -> (Chips, Mult) {
+    let (c, m) = hand_type.hand_value();
+
+    let paired_rank = cards.iter()
+        .map(|card| card.rank)
+        .find(|&rank| cards.iter().filter(|card| card.rank == rank).count() >= num)
+        .unwrap();
+
+    (c + paired_rank.rank_value() * (num as f64), m)
+}
+
+// Generic Calculation for full 5 card hand
+fn calc_five_cards(cards: &[Card], hand_type: PokerHand) -> (Chips, Mult) {
+    let (mut c, m) = hand_type.hand_value();
+    for i in 0..cards.len() {
+        c = c + cards[i].rank.rank_value();
+    }
+    (c, m)
+}
+
 // Sorts in descending order by rank
 fn sorted_by_rank(round: &Round) -> Vec<Card> {
     round.cards_played.iter()
