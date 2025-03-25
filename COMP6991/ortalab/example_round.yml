@@ -1,9 +1,57 @@
 cards_played:
-  - 10♥
-  - 10♠
-  - 10♦
-  - A♣
-  - J♥
+  # - 10♥
+  # - 10♠
+  # - 2♦
+  # - A♣
+  # - J♥
+
+  # Ace high straight 324
+  # - 10♦
+  # - Q♠
+  # - A♣
+  # - K♥
+  # - J♥
+
+  # Ace low straight 220
+  # - 2♦
+  # - 4♠
+  # - A♣
+  # - 3♥
+  # - 5♥
+
+  # generic straight 308
+  # - Q♥
+  # - 9♠
+  # - 10♣
+  # - J♥
+  # - 8♦
+
+  # generic Flush 248
+  # - Q♥
+  # - 3♥
+  # - 7♥
+  # - 5♥
+  # - 2♥
+
+  # straight Flush
+  - A♥
+  - 2♥
+  - 3♥
+  - 4♥
+  - 5♥
+
+  # generic full house
+  # - A♥
+  # - A♠
+  # - A♣
+  # - 5♥
+  # - 5♦
+  # generic four of a kind
+  # - A♥
+  # - A♠
+  # - A♣
+  # - A♦
+  # - 5♥
 
 cards_held_in_hand:
   - 2♥

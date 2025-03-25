@@ -10,7 +10,7 @@ use itertools::Itertools;
 
 use clap::Parser;
 use ortalib::{Chips, Mult, Round, PokerHand, Card};
-// use ortalib::{Suit, Rank};
+use ortalib::{Rank};
 
 #[derive(Parser)]
 struct Opts {
@@ -51,13 +51,31 @@ fn make_hand(round: &Round) -> (f64, f64) {
     let cards_by_rank = &sorted_by_rank(round);
     let cards_by_suit = &sorted_by_suit(round);
 
-    // Debugging prints
-    println!("{:?}", cards_by_rank);
-    println!("{:?}", cards_by_suit);
+// Debugging prints
+    println!("Cards played: {:?}", round.cards_played);
+    println!("Cards In hand: {:?}", round.cards_held_in_hand);
+    // println!("{:?}", cards_by_rank);
+    // println!("{:?}", cards_by_suit);
 
-    if check_straight(&cards_by_rank) {
+    if check_straightflush(&cards_by_rank) {
+        println!("Straight Flush");
+        five_card_calc(&cards_by_rank, PokerHand::StraightFlush)
+    }
+    else if check_quad(&cards_by_rank) {
+        println!("Four of a Kind");
+        five_card_calc(&cards_by_rank, PokerHand::FourOfAKind)
+    }
+    else if check_fullhouse(&cards_by_rank) {
+        println!("Fullhouse");
+        five_card_calc(&cards_by_rank, PokerHand::FullHouse)
+    }
+    else if check_flush(&cards_by_suit) {
+        println!("Flush");
+        five_card_calc(&cards_by_suit, PokerHand::Flush)
+    }
+    else if check_straight(&cards_by_rank) {
         println!("Straight");
-        calc_straight(&cards_by_rank)
+        five_card_calc(&cards_by_rank, PokerHand::Straight)
     }
     else if check_triple(&cards_by_rank) {
         println!("Three of a Kind");
@@ -77,11 +95,11 @@ fn make_hand(round: &Round) -> (f64, f64) {
     }
 
     // Order
-    // Straight Flush
-    // Four of a Kind
-    // Full House
-    // Flush
-    // Straight
+    // Straight Flush x
+    // Four of a Kind x
+    // Full House x
+    // Flush x
+    // Straight x
     // Three of a Kind x
     // Two Pair x
     // Pair x
@@ -89,14 +107,64 @@ fn make_hand(round: &Round) -> (f64, f64) {
 
 }
 
-fn check_straight(cards: &[Card]) -> bool {
-
-    // ace can only be at the start or end of a straight,
-    todo!()
-}
-fn calc_straight(cards: &[Card]) -> (f64, f64) {
-    let (c, m) = PokerHand::Straight.hand_value();
+// GENERIC CALCULATION FOR FULL 5 CARD HAND //
+fn five_card_calc(cards: &[Card], hand_type: PokerHand) -> (f64, f64) {
+    let (mut c, m) = hand_type.hand_value();
+    for i in 0..cards.len() {
+        c = c + cards[i].rank.rank_value();
+    }
     (c, m)
+}
+
+// STRAIGHT FLUSH //
+fn check_straightflush(cards: &[Card]) -> bool {
+    check_straight(cards) && check_flush(cards)
+}
+
+// Four of a Kind //
+// Checks for Four of a Kind
+fn check_quad(cards: &[Card]) -> bool {
+    cards.windows(4)
+        .any(|pair| pair[0].rank == pair[1].rank && pair[1].rank == pair[2].rank)
+}
+
+// FULL HOUSE //
+// Checks for Full House
+fn check_fullhouse(cards: &[Card]) -> bool {
+    check_triple(cards) && check_pair(cards)
+}
+
+// FLUSH //
+// Checks for Flush
+fn check_flush(cards: &[Card]) -> bool {
+    if cards.len() < 5 { return false; }
+
+    for i in 0..cards.len() - 1 {
+        if cards[i].suit != cards[i + 1].suit {
+            return false;
+        }
+    }
+    true
+}
+
+// STRAIGHT //
+// Checks for Straight
+fn check_straight(cards: &[Card]) -> bool {
+    if cards.len() < 5 { return false; }
+
+    let mut start = 0;
+    // Edge case for Ace Low Straight
+    if rank_to_num(&cards[0].rank) == 14 {
+        start = 1;
+    }
+    for i in start..cards.len() - 1 {
+        if rank_to_num(&cards[i].rank) != rank_to_num(&cards[i + 1].rank) + 1 {
+            return false;
+        }
+    }
+    true
+
+    // ace can only be at the start or end of a straight, consider edge case for A,2,3,4,5
 }
 
 // THREE OF A KIND //
@@ -112,9 +180,6 @@ fn calc_triple(cards: &[Card]) -> (f64, f64) {
     .map(|pair| pair[0]) // Extract the rank of each pair
     .collect::<Vec<_>>();
 
-    // debugging
-    println!("{:?}", pairs);
-
     (c + pairs[0].rank.rank_value() * 3.0, m)
 }
 
@@ -125,8 +190,6 @@ fn check_twopair(cards: &[Card]) -> bool {
     .filter(|pair| pair[0].rank == pair[1].rank) // Find pairs with the same rank
     .map(|pair| pair[0]) // Extract the rank of each pair
     .collect::<Vec<_>>(); // Collect ranks of pairs into a vector
-
-    println!("{:?}", pairs);
     pairs.len() == 2
 }
 fn calc_twopair(cards: &[Card]) -> (f64, f64) {
@@ -152,7 +215,7 @@ fn calc_pair(cards: &[Card]) -> (f64, f64) {
         .map(|pair| pair[0])
         .unwrap();
 
-    (c + paired_card.rank.rank_value() + paired_card.rank.rank_value(), m)
+    (c + paired_card.rank.rank_value() * 2.0, m)
 }
 
 // HIGH CARD //
@@ -162,10 +225,12 @@ fn calc_highcard(cards: &[Card]) -> (f64, f64) {
     (c + cards[0].rank.rank_value(), m)
 }
 
+
+// HELPER FUNCTIONS //
 // Sorts in descending order by rank
 fn sorted_by_rank(round: &Round) -> Vec<Card> {
     round.cards_played.iter()
-        .sorted_by_key(|card| std::cmp::Reverse(card.rank))
+        .sorted_by_key(|card| std::cmp::Reverse(rank_to_num(&card.rank)))
         .cloned() // convert back to Vec<Card>
         .collect()
 }
@@ -176,4 +241,23 @@ fn sorted_by_suit(round: &Round) -> Vec<Card> {
         .sorted_by_key(|card| (card.suit, card.rank))
         .cloned()
         .collect()
+}
+
+// Takes the rank of a card and provides a numerical value
+fn rank_to_num(rank: &Rank) -> i32 {
+    match rank {
+        Rank::Two => 2,
+        Rank::Three => 3,
+        Rank::Four => 4,
+        Rank::Five => 5,
+        Rank::Six => 6,
+        Rank::Seven => 7,
+        Rank::Eight => 8,
+        Rank::Nine => 9,
+        Rank::Ten => 10,
+        Rank::Jack => 11,
+        Rank::Queen => 12,
+        Rank::King => 13,
+        Rank::Ace => 14,
+    }
 }
