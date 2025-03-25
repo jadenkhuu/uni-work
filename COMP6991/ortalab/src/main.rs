@@ -42,6 +42,7 @@ fn score(round: Round) -> (Chips, Mult) {
     // make_hand(&round)
     let mut score = make_hand(&round);
     score = apply_enhancements(&round, score);
+    score = apply_editions(&round, score);
     score
 }
 
@@ -58,6 +59,10 @@ fn apply_enhancements(round: &Round, mut score: (Chips, Mult)) -> (Chips, Mult) 
         }
     }
     score
+}
+
+fn apply_editions(round: &Round, mut score: (Chips, Mult)) -> (Chips, Mult) {
+    todo!()
 }
 
 // Takes the cards_played and finds what poker hand it is
