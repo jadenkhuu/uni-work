@@ -1,18 +1,13 @@
 cards_played:
-  - A♥
-  - A♠
-  - A♦
-  - K♣
-  - Q♥
-
+  - A♥ Bonus Foil
+  - K♠ Mult Holographic
+  - Q♦ Glass Polychrome
+  - J♣ Wild
+  - 10♥ Steel
 
 cards_held_in_hand:
-  - 2♥
-  - 5♦
-  - 9♦
+  - K♠ Steel Foil
+  - 7♠ Steel Holographic
+  - 3♠ Steel Polychrome
 
 jokers:
-  - Joker
-  - Mad Joker
-  - Zany Joker
-  - Raised Fist

@@ -6,8 +6,8 @@ use itertools::Itertools;
 // use std::collections::HashMap;
 
 use clap::Parser;
-use ortalib::{Chips, Mult, Round, PokerHand, Card, Rank, Enhancement};
-use serde_yaml::Number;
+use ortalib::{Chips, Mult, Round, PokerHand, Card, Rank, Enhancement, Edition};
+// use serde_yaml::Number;
 
 #[derive(Parser)]
 struct Opts {
@@ -41,8 +41,11 @@ fn parse_round(opts: &Opts) -> Result<Round, Box<dyn Error>> {
 fn score(round: Round) -> (Chips, Mult) {
     // make_hand(&round)
     let mut score = make_hand(&round);
+    println!("pre {:?}", score);
     score = apply_enhancements(&round, score);
+    println!("enhancements {:?}", score);
     score = apply_editions(&round, score);
+    println!("editions {:?}", score);
     score
 }
 
@@ -52,17 +55,51 @@ fn apply_enhancements(round: &Round, mut score: (Chips, Mult)) -> (Chips, Mult) 
             match enhancement {
                 Enhancement::Bonus => score.0 += 30.0,
                 Enhancement::Mult => score.1 += 4.0,
-                Enhancement::Glass => score.1 += 2.0,
-                Enhancement::Steel => score.1 += 1.5,
-                _ => {}
+                Enhancement::Glass => score.1 *= 2.0,
+                _ => {},
             }
+            print!("{:?}", card);
+            // print!("{:?}", enhancement);
+            println!("{:?}", score);
+        }
+    }
+    for card in &round.cards_held_in_hand {
+        if let Some(enhancement) = &card.enhancement {
+            match enhancement {
+                Enhancement::Steel => score.1 *= 1.5,
+                _ => {},
+            }
+            print!("{:?}", card);
+            // print!("{:?}", enhancement);
+            println!("{:?}", score);
         }
     }
     score
 }
 
 fn apply_editions(round: &Round, mut score: (Chips, Mult)) -> (Chips, Mult) {
-    todo!()
+    for card in &round.cards_played {
+        if let Some(edition) = &card.edition {
+            match edition {
+                Edition::Foil => score.0 += 50.0,
+                Edition::Holographic => score.1 += 10.0,
+                Edition::Polychrome=> score.1 *= 1.5,
+            }
+            print!("{:?}", card);
+            // print!("{:?}", edition);
+            println!("{:?}", score);
+        }
+    }
+    for joker in &round.jokers {
+        if let Some(edition) = &joker.edition {
+            match edition {
+                Edition::Foil => score.0 += 50.0,
+                Edition::Holographic => score.1 += 10.0,
+                Edition::Polychrome=> score.1 *= 1.5,
+            }
+        }
+    }
+    score
 }
 
 // Takes the cards_played and finds what poker hand it is
@@ -107,7 +144,7 @@ fn make_hand(round: &Round) -> (Chips, Mult) {
         calc_five_cards(&cards_by_suit, PokerHand::Flush)
     }
     else if check_straight(&cards_by_rank) {
-        // println!("Straight");
+        println!("Straight");
         calc_five_cards(&cards_by_rank, PokerHand::Straight)
     }
     else if check_triple(&cards_by_rank) {
