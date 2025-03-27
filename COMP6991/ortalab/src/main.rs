@@ -49,15 +49,19 @@ fn score(round: Round) -> (Chips, Mult) {
     let mut score = hand_type.hand_value();
     // println!("initial combo value {:?}", score);
 
-    // // score each card, if splash is active, use round.played_cards instead of made_hand
+    // score each card, if splash is active, use round.played_cards instead of made_hand
     score = score_cards(&made_hand, score);
     // println!("after scoring {:?}", score);
+
+    score = score_held_cards(&round, score);
+
 
     score
 }
 
 fn make_hand(round: &Round, hand_type: PokerHand) -> Vec<Card> {
   // create a subset of cards valid to the combo
+
     let made_hand: Vec<Card> = match hand_type {
         PokerHand::FlushFive => sorted_by_suit(&round),
         PokerHand::FlushHouse => sorted_by_suit(&round),
@@ -130,7 +134,7 @@ fn check_hand(round: &Round) -> PokerHand {
     }
 }
 
-// iterates through each card in played hand to score cards
+// iterates through each card in played combo to score cards
 fn score_cards(cards: &[Card], mut score: (Chips, Mult)) -> (Chips, Mult) {
     for card in cards {
         score.0 += card.rank.rank_value();
@@ -146,9 +150,30 @@ fn score_cards(cards: &[Card], mut score: (Chips, Mult)) -> (Chips, Mult) {
             match edition {
                 Edition::Foil => score.0 += 50.0,
                 Edition::Holographic => score.1 += 10.0,
+                Edition::Polychrome => score.1 *= 1.5,
+            }
+        }
+    }
+
+    score
+}
+// iterates through each card in hand to score cards
+fn score_held_cards(round: &Round, mut score: (Chips, Mult)) -> (Chips, Mult) {
+    for card in &round.cards_held_in_hand {
+        if let Some(enhancement) = &card.enhancement {
+            match enhancement {
+                Enhancement::Steel => score.1 *= 1.50,
                 _ => {},
             }
         }
+
+        // if let Some(edition) = &card.edition {
+        //     match edition {
+        //         Edition::Foil => score.0 += 50.0,
+        //         Edition::Holographic => score.1 += 10.0,
+        //         _ => {},
+        //     }
+        // }
     }
     score
 }
@@ -189,10 +214,24 @@ fn check_fullhouse(cards: &[Card]) -> bool {
 // FLUSH //
 fn check_flush(cards: &[Card]) -> bool {
     if cards.len() < 5 { return false; }
-    cards
-    .first()
-    .map(|first_card| cards.iter().all(|card| card.suit == first_card.suit))
-    .unwrap_or(false)
+
+    // counts most often suit (excluding wilds)
+    let mut suit_counts = HashMap::new();
+    let mut wild_count = 0;
+
+    for card in cards {
+        if card.enhancement == Some(Enhancement::Wild) {
+            wild_count += 1;
+        } else {
+            *suit_counts.entry(card.suit).or_insert(0) += 1;
+        }
+    }
+
+    // finds the most common suit
+    if let Some((_most_common_suit, &count)) = suit_counts.iter().max_by_key(|&(_, &count)| count) {
+        return count + wild_count >= 5;
+    }
+    wild_count >= 5
 }
 
 // STRAIGHT //
@@ -223,20 +262,6 @@ fn check_triple(cards: &[Card]) -> bool {
 fn check_twopair(cards: &[Card]) -> bool {
     duplicate_cards(cards).values().filter(|&&count| count == 2).count() == 2
 }
-// fn calc_twopair(cards: &[Card]) -> Vec<Card> {
-//     let mut pairs = Vec::new();
-//     let mut seen_ranks = std::collections::HashSet::new();
-
-//     for window in cards.windows(2) {
-//         if window[0].rank == window[1].rank && !seen_ranks.contains(&window[0].rank) {
-//             pairs.push(window[0].clone());
-//             pairs.push(window[1].clone());
-//             seen_ranks.insert(window[0].rank);
-//         }
-//     }
-
-//     pairs
-// }
 fn calc_twopair(cards: &[Card]) -> Vec<Card> {
     let mut rank_counts: HashMap<Rank, Vec<Card>> = HashMap::new();
 
