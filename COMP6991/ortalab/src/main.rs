@@ -46,16 +46,21 @@ fn score(round: Round) -> (Chips, Mult) {
 
     // Calculate the base amount for the PLAYED HAND base on the combo
     let mut score = hand_type.hand_value();
+    // println!("{:?}", score);
 
     // Score each card, if splash is active, use round.played_cards instead of made_hand
     score = score_cards(&made_hand, score);
+    // println!("{:?}", score);
 
     // Check cards held in hand for enhancements
     score = score_held_cards(&round, score);
+    // println!("{:?}", score);
 
     // activate INDEPENDENT jokers
     score = activate_independent_jokers(&round, score);
+    // println!("{:?}", score);
     // score joker editions,
+    // println!("{:?}", score);
     score = score_joker_editions(&round, score);
 
     score
@@ -81,43 +86,43 @@ fn activate_independent_jokers(round: &Round, mut score: (Chips, Mult)) -> (Chip
         match joker.joker {
             Joker::Joker => score.1 += 4.0,
             Joker::JollyJoker => {
-                if check_pair(&round.cards_played) {
+                if duplicate_cards(&round.cards_played).values().any(|&count| count >= 2) {
                     score.1 += 8.0;
                 }},
             Joker::ZanyJoker => {
-                if check_triple(&round.cards_played) {
+                if duplicate_cards(&round.cards_played).values().any(|&count| count >= 3) {
                     score.1 += 12.0;
                 }},
             Joker::MadJoker => {
-                if check_twopair(&round.cards_played) {
+                if duplicate_cards(&round.cards_played).values().filter(|&&count| count >= 2).count() == 2 {
                     score.1 += 10.0;
                 }},
             Joker::CrazyJoker => {
-                if check_straight(&round.cards_played) {
+                if check_straight(&sorted_by_rank(&round)) {
                     score.1 += 12.0;
                 }},
             Joker::DrollJoker => {
-                if check_flush(&round.cards_played) {
+                if check_flush(&sorted_by_suit(&round)) {
                     score.1 += 10.0;
                 }},
             Joker::SlyJoker => {
-                if check_pair(&round.cards_played) {
+                if duplicate_cards(&round.cards_played).values().any(|&count| count >= 2) {
                     score.0 += 50.0;
                 }},
             Joker::WilyJoker => {
-                if check_triple(&round.cards_played) {
+                if duplicate_cards(&round.cards_played).values().any(|&count| count >= 3) {
                     score.0 += 100.0;
                 }},
             Joker::CleverJoker => {
-                if check_twopair(&round.cards_played) {
+                if duplicate_cards(&round.cards_played).values().filter(|&&count| count >= 2).count() == 2 {
                     score.0 += 80.0;
                 }},
             Joker::DeviousJoker => {
-                if check_straight(&round.cards_played) {
+                if check_straight(&sorted_by_rank(&round)) {
                     score.0 += 100.0;
                 }},
             Joker::CraftyJoker => {
-                if check_flush(&round.cards_played) {
+                if check_flush(&sorted_by_suit(&round)) {
                     score.0 += 80.0;
                 }},
             Joker::AbstractJoker => {
@@ -130,26 +135,6 @@ fn activate_independent_jokers(round: &Round, mut score: (Chips, Mult)) -> (Chip
     score
 }
 
-// DETERMINES POKER COMBO, CREATES A SUBSET CARDS BASED ON COMBO
-fn make_hand(round: &Round, hand_type: PokerHand) -> Vec<Card> {
-  // create a subset of cards valid to the combo
-
-    let made_hand: Vec<Card> = match hand_type {
-        PokerHand::FlushFive => sorted_by_suit(&round),
-        PokerHand::FlushHouse => sorted_by_suit(&round),
-        PokerHand::FiveOfAKind => sorted_by_suit(&round),
-        PokerHand::StraightFlush => sorted_by_suit(&round),
-        PokerHand::FourOfAKind => calc_duplicates(&sorted_by_suit(&round), 4),
-        PokerHand::FullHouse => sorted_by_suit(&round),
-        PokerHand::Flush => sorted_by_rank(&round),
-        PokerHand::Straight => sorted_by_rank(&round),
-        PokerHand::ThreeOfAKind => calc_duplicates(&sorted_by_suit(&round), 3),
-        PokerHand::TwoPair => calc_twopair(&sorted_by_suit(&round)),
-        PokerHand::Pair => calc_duplicates(&sorted_by_suit(&round), 2),
-        _ => calc_highcard(&sorted_by_rank(&round)),
-    };
-    made_hand
-}
 
 // Returns the Poker Hand ID of
 fn check_hand(round: &Round) -> PokerHand {
@@ -204,6 +189,27 @@ fn check_hand(round: &Round) -> PokerHand {
         // println!("High card");
         PokerHand::HighCard
     }
+}
+
+// DETERMINES POKER COMBO, CREATES A SUBSET CARDS BASED ON COMBO
+fn make_hand(round: &Round, hand_type: PokerHand) -> Vec<Card> {
+  // create a subset of cards valid to the combo
+
+    let made_hand: Vec<Card> = match hand_type {
+        PokerHand::FlushFive => sorted_by_suit(&round),
+        PokerHand::FlushHouse => sorted_by_suit(&round),
+        PokerHand::FiveOfAKind => sorted_by_suit(&round),
+        PokerHand::StraightFlush => sorted_by_suit(&round),
+        PokerHand::FourOfAKind => calc_duplicates(&sorted_by_suit(&round), 4),
+        PokerHand::FullHouse => sorted_by_suit(&round),
+        PokerHand::Flush => sorted_by_rank(&round),
+        PokerHand::Straight => sorted_by_rank(&round),
+        PokerHand::ThreeOfAKind => calc_duplicates(&sorted_by_suit(&round), 3),
+        PokerHand::TwoPair => calc_twopair(&sorted_by_suit(&round)),
+        PokerHand::Pair => calc_duplicates(&sorted_by_suit(&round), 2),
+        _ => calc_highcard(&sorted_by_rank(&round)),
+    };
+    made_hand
 }
 
 // iterates through each card in played combo to score cards
@@ -274,7 +280,7 @@ fn check_straightflush(cards: &[Card]) -> bool {
 
 // FOUR OF A KIND //
 fn check_quad(cards: &[Card]) -> bool {
-    duplicate_cards(cards).values().any(|&count| count == 4)
+    duplicate_cards(cards).values().any(|&count| count >= 4)
 }
 
 // FULL HOUSE //
