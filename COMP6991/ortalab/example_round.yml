@@ -1,10 +1,13 @@
 cards_played:
-  - A♥ Polychrome
-  - K♠
-  - Q♦
+  - A♥ Foil
+  - K♠ Holographic
+  - Q♦ Polychrome
   - J♣
   - 10♥
 
 cards_held_in_hand: []
 
-jokers: []
+jokers:
+  - Joker Foil
+  - Jolly Joker Holographic
+  - Zany Joker Polychrome

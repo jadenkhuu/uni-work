@@ -1,12 +1,12 @@
 use std::{
-    collections::HashMap, error::Error, fs::File, io::{stdin, Read}, path::{Path, PathBuf},
+    collections::HashMap, error::Error, fs::File, io::{stdin, Read}, path::{Path, PathBuf}
 };
 
 use itertools::Itertools;
 
 use clap::Parser;
 use ortalib::{
-    Chips, Mult, Round, PokerHand, Card, Rank, Enhancement, Edition
+    Card, Chips, Edition, Enhancement, Joker, Mult, PokerHand, Rank, Round
 };
 
 #[derive(Parser)]
@@ -43,22 +43,94 @@ fn score(round: Round) -> (Chips, Mult) {
 
     // create a subset of cards valid to the combo
     let made_hand  = make_hand(&round, hand_type);
-    // println!("made hand = {:?}", &made_hand);
 
     // Calculate the base amount for the PLAYED HAND base on the combo
     let mut score = hand_type.hand_value();
-    // println!("initial combo value {:?}", score);
 
-    // score each card, if splash is active, use round.played_cards instead of made_hand
+    // Score each card, if splash is active, use round.played_cards instead of made_hand
     score = score_cards(&made_hand, score);
-    // println!("after scoring {:?}", score);
 
+    // Check cards held in hand for enhancements
     score = score_held_cards(&round, score);
 
+    // activate INDEPENDENT jokers
+    score = activate_independent_jokers(&round, score);
+    // score joker editions,
+    score = score_joker_editions(&round, score);
 
     score
 }
 
+// SCORING JOKER EDITIONS
+fn score_joker_editions(round: &Round, mut score: (Chips, Mult)) -> (Chips, Mult) {
+    for joker in &round.jokers {
+        if let Some(edition) = &joker.edition {
+            match edition {
+                Edition::Foil => score.0 += 50.0,
+                Edition::Holographic => score.1 += 10.0,
+                Edition::Polychrome => score.1 *= 1.5,
+            }
+        }
+    }
+    score
+}
+
+// INDEPENDENT JOKERS
+fn activate_independent_jokers(round: &Round, mut score: (Chips, Mult)) -> (Chips, Mult) {
+    for joker in &round.jokers {
+        match joker.joker {
+            Joker::Joker => score.1 += 4.0,
+            Joker::JollyJoker => {
+                if check_pair(&round.cards_played) {
+                    score.1 += 8.0;
+                }},
+            Joker::ZanyJoker => {
+                if check_triple(&round.cards_played) {
+                    score.1 += 12.0;
+                }},
+            Joker::MadJoker => {
+                if check_twopair(&round.cards_played) {
+                    score.1 += 10.0;
+                }},
+            Joker::CrazyJoker => {
+                if check_straight(&round.cards_played) {
+                    score.1 += 12.0;
+                }},
+            Joker::DrollJoker => {
+                if check_flush(&round.cards_played) {
+                    score.1 += 10.0;
+                }},
+            Joker::SlyJoker => {
+                if check_pair(&round.cards_played) {
+                    score.0 += 50.0;
+                }},
+            Joker::WilyJoker => {
+                if check_triple(&round.cards_played) {
+                    score.0 += 100.0;
+                }},
+            Joker::CleverJoker => {
+                if check_twopair(&round.cards_played) {
+                    score.0 += 80.0;
+                }},
+            Joker::DeviousJoker => {
+                if check_straight(&round.cards_played) {
+                    score.0 += 100.0;
+                }},
+            Joker::CraftyJoker => {
+                if check_flush(&round.cards_played) {
+                    score.0 += 80.0;
+                }},
+            Joker::AbstractJoker => {
+                score.1 += 3.0 * round.jokers.len() as f64;
+            },
+            _ => {},
+        }
+    }
+
+    score
+}
+
+// DETERMINES POKER COMBO, CREATES A SUBSET CARDS BASED ON COMBO
 fn make_hand(round: &Round, hand_type: PokerHand) -> Vec<Card> {
   // create a subset of cards valid to the combo
 
