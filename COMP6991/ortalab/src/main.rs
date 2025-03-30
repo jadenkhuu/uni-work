@@ -1,18 +1,17 @@
 use std::{
-    collections::HashMap, error::Error, fs::File, io::{stdin, Read}, path::{Path, PathBuf}
+    collections::{HashMap, HashSet}, error::Error, fs::File, io::{stdin, Read}, path::{Path, PathBuf}
 };
 
 use itertools::Itertools;
 
 use clap::Parser;
 use ortalib::{
-    Card, Chips, Edition, Enhancement, Joker, Mult, PokerHand, Rank, Round
+    Card, Chips, Edition, Enhancement, Joker, Mult, PokerHand, Rank, Round, Suit
 };
 
 #[derive(Parser)]
 struct Opts {
     file: PathBuf,
-
     #[arg(long)]
     explain: bool,
 }
@@ -38,108 +37,155 @@ fn parse_round(opts: &Opts) -> Result<Round, Box<dyn Error>> {
 }
 
 fn score(round: Round) -> (Chips, Mult) {
-    // Determine what the combo hand is
+    // 1.0 Determine what the combo hand is
     let hand_type = check_hand(&round);
 
-    // create a subset of cards valid to the combo
+    // 1.0 create a subset of cards valid to the combo
     let made_hand  = make_hand(&round, hand_type);
 
-    // Calculate the base amount for the PLAYED HAND base on the combo
+    // 1.0 Calculate the base amount for the PLAYED HAND base on the combo
     let mut score = hand_type.hand_value();
-    // println!("{:?}", score);
 
+    // 2.1, 2.2, 2.3
     // Score each card, if splash is active, use round.played_cards instead of made_hand
-    score = score_cards(&made_hand, score);
-    // println!("{:?}", score);
+    // 2.4 "On scored" jokers
+    score = score_cards(&made_hand, score, &round);
 
-    // Check cards held in hand for enhancements
+
+    // 3.1 Check cards held in hand for enhancements
+    // 3.2 Activates "On Held" Jokers too
     score = score_held_cards(&round, score);
-    // println!("{:?}", score);
 
-    // activate INDEPENDENT jokers
-    score = activate_independent_jokers(&round, score);
-    // println!("{:?}", score);
-    // score joker editions,
-    // println!("{:?}", score);
+    // 4.1 Applies joker editions, ONLY Foil or Holographic
     score = score_joker_editions(&round, score);
+
+    // 4.2 activate INDEPENDENT jokers
+    // 4.3 Applies Joker Polychrome edition
+    score = activate_independent_jokers_polychrome(&round, score);
 
     score
 }
 
-// SCORING JOKER EDITIONS
+// Applies only Foil or Holographic editions
+// 4.1
 fn score_joker_editions(round: &Round, mut score: (Chips, Mult)) -> (Chips, Mult) {
     for joker in &round.jokers {
         if let Some(edition) = &joker.edition {
             match edition {
                 Edition::Foil => score.0 += 50.0,
                 Edition::Holographic => score.1 += 10.0,
-                Edition::Polychrome => score.1 *= 1.5,
+                _ => {},
             }
         }
     }
     score
 }
 
-// INDEPENDENT JOKERS
-fn activate_independent_jokers(round: &Round, mut score: (Chips, Mult)) -> (Chips, Mult) {
+// Activates independent jokers, then applies Polychrome editions for jokers.
+// 4.2, 4.3
+fn activate_independent_jokers_polychrome(round: &Round, mut score: (Chips, Mult)) -> (Chips, Mult) {
+    let played_by_rank = sorted_by_rank(&round.cards_played);
+    let played_by_suit = sorted_by_suit(&round.cards_played);
     for joker in &round.jokers {
         match joker.joker {
             Joker::Joker => score.1 += 4.0,
             Joker::JollyJoker => {
-                if duplicate_cards(&round.cards_played).values().any(|&count| count >= 2) {
+                if check_pair(&played_by_rank) {
                     score.1 += 8.0;
                 }},
             Joker::ZanyJoker => {
-                if duplicate_cards(&round.cards_played).values().any(|&count| count >= 3) {
+                if check_triple(&played_by_rank) {
                     score.1 += 12.0;
                 }},
             Joker::MadJoker => {
-                if duplicate_cards(&round.cards_played).values().filter(|&&count| count >= 2).count() == 2 {
+                if check_twopair(&played_by_suit) {
                     score.1 += 10.0;
                 }},
             Joker::CrazyJoker => {
-                if check_straight(&sorted_by_rank(&round)) {
+                if check_straight(&played_by_rank) {
                     score.1 += 12.0;
                 }},
             Joker::DrollJoker => {
-                if check_flush(&sorted_by_suit(&round)) {
+                if check_flush(&played_by_suit) {
                     score.1 += 10.0;
                 }},
             Joker::SlyJoker => {
-                if duplicate_cards(&round.cards_played).values().any(|&count| count >= 2) {
+                if check_pair(&played_by_rank) {
                     score.0 += 50.0;
                 }},
             Joker::WilyJoker => {
-                if duplicate_cards(&round.cards_played).values().any(|&count| count >= 3) {
+                if check_triple(&played_by_rank) {
                     score.0 += 100.0;
                 }},
             Joker::CleverJoker => {
-                if duplicate_cards(&round.cards_played).values().filter(|&&count| count >= 2).count() == 2 {
+                if check_twopair(&played_by_suit) {
                     score.0 += 80.0;
                 }},
             Joker::DeviousJoker => {
-                if check_straight(&sorted_by_rank(&round)) {
+                if check_straight(&played_by_rank) {
                     score.0 += 100.0;
                 }},
             Joker::CraftyJoker => {
-                if check_flush(&sorted_by_suit(&round)) {
+                if check_flush(&played_by_suit) {
                     score.0 += 80.0;
                 }},
             Joker::AbstractJoker => {
                 score.1 += 3.0 * round.jokers.len() as f64;
             },
+            Joker::Blackboard => {
+                if round.cards_held_in_hand.iter().all(|card|
+                    card.suit == Suit::Clubs ||
+                    card.suit == Suit::Spades ||
+                    card.enhancement == Some(Enhancement::Wild))
+                {
+                    score.1 *= 3.0;
+                }
+            }
+            Joker::FlowerPot => {
+                if played_by_suit.len() >= 4 && at_least_one_each_suit(&played_by_rank) {
+                    score.1 *= 3.0;
+                }
+            }
             _ => {},
+        }
+    }
+    for joker in &round.jokers {
+        if let Some(edition) = &joker.edition {
+            match edition {
+                Edition::Polychrome => score.1 *= 1.5,
+                _ => {},
+            }
         }
     }
 
     score
 }
 
+// Flower Pot Joker helper function
+// Checks if the hand has at least one of each suit or wildcard
+fn at_least_one_each_suit(cards: &[Card]) -> bool {
+    let mut suits_seen = HashSet::new();
+    let mut wild_cards = 0;
 
+    for card in cards {
+        if let Some(enhancement) = card.enhancement {
+            if enhancement == Enhancement::Wild {
+                wild_cards += 1;
+            }
+        } else {
+            suits_seen.insert(card.suit.clone());
+        }
+    }
+
+    // return final bool accounting for wild cards too.
+    suits_seen.len() + wild_cards >= 4
+}
+
+// HAND OPERATIONS //
 // Returns the Poker Hand ID of
 fn check_hand(round: &Round) -> PokerHand {
-    let cards_by_rank = &sorted_by_rank(round);
-    let cards_by_suit = &sorted_by_suit(round);
+    let cards_by_rank = &sorted_by_rank(&round.cards_played);
+    let cards_by_suit = &sorted_by_suit(&round.cards_played);
 
     if check_flushfive(&cards_by_rank) {
         // println!("Flush Five");
@@ -191,29 +237,37 @@ fn check_hand(round: &Round) -> PokerHand {
     }
 }
 
-// DETERMINES POKER COMBO, CREATES A SUBSET CARDS BASED ON COMBO
+// Determines the best poker hand possible, returns subset of the hand as valid cards
+// 1.0
 fn make_hand(round: &Round, hand_type: PokerHand) -> Vec<Card> {
   // create a subset of cards valid to the combo
+    let cards_by_rank = sorted_by_rank(&round.cards_played);
+    let cards_by_suit = sorted_by_suit(&round.cards_played);
 
     let made_hand: Vec<Card> = match hand_type {
-        PokerHand::FlushFive => sorted_by_suit(&round),
-        PokerHand::FlushHouse => sorted_by_suit(&round),
-        PokerHand::FiveOfAKind => sorted_by_suit(&round),
-        PokerHand::StraightFlush => sorted_by_suit(&round),
-        PokerHand::FourOfAKind => calc_duplicates(&sorted_by_suit(&round), 4),
-        PokerHand::FullHouse => sorted_by_suit(&round),
-        PokerHand::Flush => sorted_by_rank(&round),
-        PokerHand::Straight => sorted_by_rank(&round),
-        PokerHand::ThreeOfAKind => calc_duplicates(&sorted_by_suit(&round), 3),
-        PokerHand::TwoPair => calc_twopair(&sorted_by_suit(&round)),
-        PokerHand::Pair => calc_duplicates(&sorted_by_suit(&round), 2),
-        _ => calc_highcard(&sorted_by_rank(&round)),
+        PokerHand::FlushFive => cards_by_suit,
+        PokerHand::FlushHouse => cards_by_suit,
+        PokerHand::FiveOfAKind => cards_by_suit,
+        PokerHand::StraightFlush => cards_by_suit,
+        PokerHand::FourOfAKind => calc_duplicates(&cards_by_suit, 4),
+        PokerHand::FullHouse => cards_by_suit,
+        PokerHand::Flush => cards_by_rank,
+        PokerHand::Straight => cards_by_rank,
+        PokerHand::ThreeOfAKind => calc_duplicates(&cards_by_suit, 3),
+        PokerHand::TwoPair => calc_twopair(&cards_by_suit),
+        PokerHand::Pair => calc_duplicates(&cards_by_suit, 2),
+        _ => calc_highcard(&cards_by_rank),
     };
     made_hand
 }
 
-// iterates through each card in played combo to score cards
-fn score_cards(cards: &[Card], mut score: (Chips, Mult)) -> (Chips, Mult) {
+// HAND SCORING //
+// Iterates through each card in played combo to score cards
+// 2.1, 2.2, 2.3
+fn score_cards(cards: &[Card], mut score: (Chips, Mult), round: &Round) -> (Chips, Mult) {
+    let first_face_card = cards.iter().find(|card| card.rank.is_face());
+    let has_photograph_joker = round.jokers.iter().any(|j| matches!(j.joker, Joker::Photograph));
+
     for card in cards {
         score.0 += card.rank.rank_value();
         if let Some(enhancement) = &card.enhancement {
@@ -231,12 +285,81 @@ fn score_cards(cards: &[Card], mut score: (Chips, Mult)) -> (Chips, Mult) {
                 Edition::Polychrome => score.1 *= 1.5,
             }
         }
+
+        // If the player has Photograph Joker and it is the first face card
+        if Some(card) == first_face_card && has_photograph_joker {
+            score.1 *= 2.0;
+        }
+
+        score = activate_on_scored_jokers(card, score, round);
     }
 
     score
 }
-// iterates through each card in hand to score cards
+// 2.4 On scored jokers helper
+fn activate_on_scored_jokers(card: &Card, mut score: (Chips, Mult), round: &Round) -> (Chips, Mult) {
+    for joker in &round.jokers {
+        match joker.joker {
+            Joker::GreedyJoker => {
+                if card.suit == Suit::Diamonds ||
+                    card.enhancement == Some(Enhancement::Wild)
+                {
+                    score.1 += 3.0;
+                }},
+            Joker::LustyJoker => {
+                if card.suit == Suit::Hearts ||
+                    card.enhancement == Some(Enhancement::Wild)
+                {
+                    score.1 += 3.0;
+                }},
+            Joker::WrathfulJoker => {
+                if card.suit == Suit::Spades ||
+                    card.enhancement == Some(Enhancement::Wild)
+                {
+                    score.1 += 3.0;
+                }},
+            Joker::GluttonousJoker => {
+                if card.suit == Suit::Clubs ||
+                    card.enhancement == Some(Enhancement::Wild)
+                {
+                    score.1 += 3.0;
+                }},
+            Joker::Fibonacci => {
+                if card.rank == Rank::Ace ||
+                    card.rank == Rank::Two ||
+                    card.rank == Rank::Three ||
+                    card.rank == Rank::Five ||
+                    card.rank == Rank::Eight
+                {
+                    score.1 += 8.0;
+                }},
+            Joker::ScaryFace => {
+                if card.rank.is_face() {
+                    score.0 += 30.0;
+                }},
+            Joker::EvenSteven => {
+                if !card.rank.is_face() && card.rank.rank_value() % 2.0 == 0.0 {
+                    score.1 += 4.0;
+                }},
+            Joker::OddTodd => {
+                if !card.rank.is_face() && card.rank.rank_value() % 2.0 != 0.0 {
+                    score.0 += 31.0;
+                }},
+            Joker::SmileyFace => {
+                if card.rank.is_face() {
+                    score.1 += 5.0;
+                }},
+            _ => {},
+        }
+    }
+    score
+}
+
+// 3.1 Check cards in hand, apply enhancements
+// 3.2 Activates "On Held" jokers
 fn score_held_cards(round: &Round, mut score: (Chips, Mult)) -> (Chips, Mult) {
+    let has_raised_fist_joker = round.jokers.iter().any(|j| matches!(j.joker, Joker::RaisedFist));
+
     for card in &round.cards_held_in_hand {
         if let Some(enhancement) = &card.enhancement {
             match enhancement {
@@ -244,24 +367,39 @@ fn score_held_cards(round: &Round, mut score: (Chips, Mult)) -> (Chips, Mult) {
                 _ => {},
             }
         }
+        score = activate_on_held_jokers(card, score, round);
+    }
 
-        // if let Some(edition) = &card.edition {
-        //     match edition {
-        //         Edition::Foil => score.0 += 50.0,
-        //         Edition::Holographic => score.1 += 10.0,
-        //         _ => {},
-        //     }
-        // }
+    if has_raised_fist_joker {
+        let min_rank = round.cards_held_in_hand.iter().map(|c| c.rank).min().unwrap();
+        let lowest_rank = round.cards_held_in_hand.iter().rfind(|c| c.rank == min_rank).unwrap();
+        score.1 += lowest_rank.rank.rank_value() * 2.0;
+    }
+
+    score
+}
+fn activate_on_held_jokers(card: &Card, mut score: (Chips, Mult), round: &Round) -> (Chips, Mult) {
+    for joker in &round.jokers {
+        match joker.joker {
+            // Joker::RaisedFist => {},
+            Joker::Baron => {
+                if card.rank == Rank::King {
+                    score.1 *= 1.5;
+                }
+            },
+            _ => {}
+        }
     }
     score
 }
 
+
+// POKER COMBO CHECKS //
 // FLUSH FIVE //
 fn check_flushfive(cards: &[Card]) -> bool {
     if cards.len() < 5 { return false; }
     check_five(cards) && check_flush(cards)
 }
-
 // FLUSH HOUSE //
 fn check_flushhouse(cards: &[Card]) -> bool {
     if cards.len() < 5 { return false; }
@@ -286,7 +424,9 @@ fn check_quad(cards: &[Card]) -> bool {
 // FULL HOUSE //
 fn check_fullhouse(cards: &[Card]) -> bool {
     if cards.len() < 5 { return false; }
-    check_triple(cards) && check_pair(cards)
+    // Consists of exactly triple and double
+    duplicate_cards(cards).values().any(|&count| count == 3)
+    && duplicate_cards(cards).values().any(|&count| count == 2)
 }
 
 // FLUSH //
@@ -318,7 +458,7 @@ fn check_straight(cards: &[Card]) -> bool {
 
     let mut start = 0;
     // Edge case for Ace Low Straight
-    if rank_to_num(&cards[0].rank) == 14 {
+    if rank_to_num(&cards[0].rank) == 14 && cards[1].rank == Rank::Five{
         start = 1;
     }
     for i in start..cards.len() - 1 {
@@ -333,7 +473,7 @@ fn check_straight(cards: &[Card]) -> bool {
 
 // THREE OF A KIND //
 fn check_triple(cards: &[Card]) -> bool {
-    duplicate_cards(cards).values().any(|&count| count == 3)
+    duplicate_cards(cards).values().any(|&count| count >= 3)
 }
 
 // TWO PAIR //
@@ -358,12 +498,13 @@ fn calc_twopair(cards: &[Card]) -> Vec<Card> {
 
     pairs
 }
+
 // PAIR //
 fn check_pair(cards: &[Card]) -> bool {
-    duplicate_cards(cards).values().any(|&count| count == 2)
+    duplicate_cards(cards).values().any(|&count| count >= 2)
 }
 
-// HIGH CARD //
+// HIGH CARD CALCULATION //
 fn calc_highcard(cards: &[Card]) -> Vec<Card> {
     vec![cards[0].clone()]
 }
@@ -394,16 +535,16 @@ fn calc_duplicates(cards: &[Card], num: usize) -> Vec<Card> {
 }
 
 // Sorts in descending order by rank
-fn sorted_by_rank(round: &Round) -> Vec<Card> {
-    round.cards_played.iter()
+fn sorted_by_rank(cards: &[Card]) -> Vec<Card> {
+    cards.iter()
         .sorted_by_key(|card| std::cmp::Reverse(rank_to_num(&card.rank)))
         .cloned() // convert back to Vec<Card>
         .collect()
 }
 
 // Sorts and groups into suits (spade, heart, club, diamond) while keeping rank order
-fn sorted_by_suit(round: &Round) -> Vec<Card> {
-    round.cards_played.iter()
+fn sorted_by_suit(cards: &[Card]) -> Vec<Card> {
+    cards.iter()
         .sorted_by_key(|card| (card.suit, card.rank))
         .cloned()
         .collect()
